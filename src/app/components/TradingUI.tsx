@@ -194,7 +194,7 @@ export function TradingUI() {
   return (
     <div className="flex-1 min-w-0 overflow-auto scrollbar-hide font-['Inter']">
       {/* ═══ TERMINAL SHELL ═══ */}
-      <div className="flex flex-col h-full min-h-screen xl:h-screen">
+      <div className="flex flex-col h-full min-h-screen">
 
         {/* ── TOP BAR: Token identity + stats ── */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-0 px-3 sm:px-5 py-3 border-b border-white/[0.06]">
@@ -295,7 +295,7 @@ export function TradingUI() {
         </div>
 
         {/* ── MAIN CONTENT: Left panel + Right panel ── */}
-        <div className="flex flex-col lg:flex-row flex-1 min-h-0">
+        <div className="flex flex-col lg:flex-row flex-1">
 
           {/* LEFT: Trading Form */}
           <div className="w-full lg:w-[420px] xl:w-[440px] lg:shrink-0 border-b lg:border-b-0 lg:border-r border-white/[0.06] overflow-y-auto">
@@ -313,12 +313,12 @@ export function TradingUI() {
           <div className="flex-1 min-w-0 flex flex-col min-h-0">
 
             {/* Chart / Order Book area */}
-            <div className="flex-1 min-h-[300px] sm:min-h-[360px] md:min-h-[420px] flex flex-col p-3 sm:p-4 border-b border-white/[0.06]">
+            <div className="min-h-[300px] sm:min-h-[340px] flex flex-col p-3 sm:p-4 border-b border-white/[0.06]">
               <ChartPanel assetType={assetType} flat />
             </div>
 
             {/* Activity Table */}
-            <div className="min-h-0 shrink overflow-y-auto">
+            <div className="flex-1 min-h-[280px] overflow-y-auto">
               <div className="px-2 sm:px-3 py-2">
                 <ActivityTable
                   orders={orders}
