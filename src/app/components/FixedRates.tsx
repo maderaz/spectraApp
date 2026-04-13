@@ -284,31 +284,31 @@ export function FixedRates() {
         <div className="flex-1 min-h-0 flex flex-col overflow-x-auto">
           {/* Table header */}
           <div className="flex items-center px-4 py-[10px] border-b border-white/[0.06] shrink-0 min-w-[620px]">
-            <div className="w-[28%] min-w-[180px]">
+            <div className="w-[22%] min-w-[160px]">
               <span className={H} style={{ fontWeight: 500 }} onClick={() => toggleSort("pool")}>
                 Pool
                 <SortIcon active={sortKey === "pool"} dir={sortDir} />
               </span>
             </div>
-            <div className="w-[16%] min-w-[110px]">
+            <div className="w-[13%] min-w-[100px]">
               <span className={H} style={{ fontWeight: 500 }} onClick={() => toggleSort("apy")}>
                 Max Fixed APY
                 <SortIcon active={sortKey === "apy"} dir={sortDir} />
               </span>
             </div>
-            <div className="w-[18%] min-w-[110px]">
+            <div className="w-[15%] min-w-[110px]">
               <span className={H} style={{ fontWeight: 500 }} onClick={() => toggleSort("ibt")}>
                 Default Token
                 <SortIcon active={sortKey === "ibt"} dir={sortDir} />
               </span>
             </div>
-            <div className="w-[18%] min-w-[100px]">
+            <div className="w-[14%] min-w-[90px]">
               <span className={H} style={{ fontWeight: 500 }} onClick={() => toggleSort("liquidity")}>
                 Liquidity
                 <SortIcon active={sortKey === "liquidity"} dir={sortDir} />
               </span>
             </div>
-            <div className="w-[20%] min-w-[110px]">
+            <div className="flex-1 min-w-[100px]">
               <span className={H} style={{ fontWeight: 500 }} onClick={() => toggleSort("maturity")}>
                 Maturity
                 <SortIcon active={sortKey === "maturity"} dir={sortDir} />
@@ -325,7 +325,7 @@ export function FixedRates() {
                 className="flex items-center px-4 py-[12px] border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors cursor-pointer group min-w-[620px]"
               >
                 {/* Pool */}
-                <div className="w-[28%] min-w-[180px]">
+                <div className="w-[22%] min-w-[160px]">
                   <div className="flex items-center gap-2.5">
                     {/* Network icon — separate, to the left */}
                     <div className="w-[16px] flex items-center justify-center shrink-0">
@@ -350,14 +350,14 @@ export function FixedRates() {
                 </div>
 
                 {/* Max Fixed APY */}
-                <div className="w-[16%] min-w-[110px]">
+                <div className="w-[13%] min-w-[100px]">
                   <span className="text-[13px] text-[#00f99b]" style={{ fontWeight: 500 }}>
                     {pool.maxFixedApy.toFixed(2)}%
                   </span>
                 </div>
 
                 {/* IBT */}
-                <div className="w-[18%] min-w-[110px]">
+                <div className="w-[15%] min-w-[110px]">
                   <div className="flex items-center gap-2">
                     <SmallTokenCircle color={pool.ibtIconColor} char={pool.ibtIconChar} size={20} />
                     <span className="text-[13px] text-white/70" style={{ fontWeight: 400 }}>{pool.ibt}</span>
@@ -365,14 +365,14 @@ export function FixedRates() {
                 </div>
 
                 {/* Liquidity */}
-                <div className="w-[18%] min-w-[100px]">
+                <div className="w-[14%] min-w-[90px]">
                   <span className="text-[13px] text-white" style={{ fontWeight: 500 }}>
                     {formatLiquidity(pool.liquidity)}
                   </span>
                 </div>
 
                 {/* Maturity */}
-                <div className="w-[20%] min-w-[110px]">
+                <div className="flex-1 min-w-[100px]">
                   <span className="text-[13px] text-white/50" style={{ fontWeight: 400 }}>{pool.maturity}</span>
                 </div>
               </div>

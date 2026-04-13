@@ -286,19 +286,19 @@ export function YieldLeverage() {
         <div className="flex-1 min-h-0 flex flex-col overflow-x-auto">
           {/* Table header */}
           <div className="flex items-center px-4 py-[10px] border-b border-white/[0.06] shrink-0 min-w-[760px]">
-            <div className="w-[20%] min-w-[160px]">
+            <div className="w-[22%] min-w-[160px]">
               <span className={H} style={{ fontWeight: 500 }} onClick={() => toggleSort("pool")}>
                 Pool
                 <SortIcon active={sortKey === "pool"} dir={sortDir} />
               </span>
             </div>
-            <div className="w-[12%] min-w-[110px] pr-2">
+            <div className="w-[13%] min-w-[100px]">
               <span className={H} style={{ fontWeight: 500 }} onClick={() => toggleSort("leverage")}>
                 Yield Leverage
                 <SortIcon active={sortKey === "leverage"} dir={sortDir} />
               </span>
             </div>
-            <div className="w-[14%] min-w-[120px]">
+            <div className="w-[15%] min-w-[110px]">
               <span className={H} style={{ fontWeight: 500 }} onClick={() => toggleSort("ibt")}>
                 Default Token
                 <SortIcon active={sortKey === "ibt"} dir={sortDir} />
@@ -310,19 +310,19 @@ export function YieldLeverage() {
                 <SortIcon active={sortKey === "liquidity"} dir={sortDir} />
               </span>
             </div>
-            <div className="w-[13%] min-w-[90px]">
+            <div className="w-[12%] min-w-[90px]">
               <span className={H} style={{ fontWeight: 500 }} onClick={() => toggleSort("baseApy")}>
                 Base APY
                 <SortIcon active={sortKey === "baseApy"} dir={sortDir} />
               </span>
             </div>
-            <div className="w-[13%] min-w-[90px]">
+            <div className="w-[12%] min-w-[90px]">
               <span className={H} style={{ fontWeight: 500 }} onClick={() => toggleSort("impliedApy")}>
                 Implied APY
                 <SortIcon active={sortKey === "impliedApy"} dir={sortDir} />
               </span>
             </div>
-            <div className="w-[14%] min-w-[100px]">
+            <div className="w-[12%] min-w-[100px]">
               <span className={H} style={{ fontWeight: 500 }} onClick={() => toggleSort("expiry")}>
                 Expiry
                 <SortIcon active={sortKey === "expiry"} dir={sortDir} />
@@ -339,7 +339,7 @@ export function YieldLeverage() {
                 className="flex items-center px-4 py-[12px] border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors cursor-pointer group min-w-[760px]"
               >
                 {/* Pool */}
-                <div className="w-[20%] min-w-[160px]">
+                <div className="w-[22%] min-w-[160px]">
                   <div className="flex items-center gap-2.5">
                     {/* Network icon */}
                     <div className="w-[16px] flex items-center justify-center shrink-0">
@@ -360,14 +360,14 @@ export function YieldLeverage() {
                 </div>
 
                 {/* Yield Leverage — YT accent color */}
-                <div className="w-[12%] min-w-[110px] pr-2">
+                <div className="w-[13%] min-w-[100px]">
                   <span className="text-[13px] text-[#f4c071]" style={{ fontWeight: 500 }}>
                     {pool.leverage.toFixed(2)}x
                   </span>
                 </div>
 
                 {/* IBT */}
-                <div className="w-[14%] min-w-[120px]">
+                <div className="w-[15%] min-w-[110px]">
                   <div className="flex items-center gap-2">
                     <SmallTokenCircle color={pool.ibtIconColor} char={pool.ibtIconChar} size={20} />
                     <span className="text-[13px] text-white/70" style={{ fontWeight: 400 }}>{pool.ibt}</span>
@@ -382,7 +382,7 @@ export function YieldLeverage() {
                 </div>
 
                 {/* Base APY */}
-                <div className="w-[13%] min-w-[90px]">
+                <div className="w-[12%] min-w-[90px]">
                   <div className="flex items-center">
                     <span className="text-[13px] text-white/70" style={{ fontWeight: 400 }}>
                       {pool.baseApy !== null ? `${pool.baseApy.toFixed(2)}%` : "-"}
@@ -391,7 +391,7 @@ export function YieldLeverage() {
                 </div>
 
                 {/* Implied APY */}
-                <div className="w-[13%] min-w-[90px]">
+                <div className="w-[12%] min-w-[90px]">
                   <span
                     className="text-[13px] text-white/70"
                     style={{ fontWeight: 400 }}
@@ -401,7 +401,7 @@ export function YieldLeverage() {
                 </div>
 
                 {/* Expiry */}
-                <div className="w-[14%] min-w-[100px]">
+                <div className="w-[12%] min-w-[100px]">
                   <span className="text-[13px] text-white/50" style={{ fontWeight: 400 }}>{pool.expiry}</span>
                 </div>
               </div>
