@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useNavigate } from "react-router";
 import { NetworkDropdown, FiltersDropdown, ALL_NETWORKS, DEFAULT_FILTERS } from "./FilterDropdowns";
 import type { FilterFlags } from "./FilterDropdowns";
 import { TokenCircle, SmallTokenCircle, SortIcon, SearchIcon, HelpIcon } from "./shared/TableIcons";
@@ -148,6 +149,7 @@ const NOW_TS = 1773532800; // Mar 13 2026 approx
 const THIRTY_DAYS = 30 * 86400;
 
 export function Pools() {
+  const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [searchOpen, setSearchOpen] = useState(false);
   const [quickFilter, setQuickFilter] = useState<QuickFilter>("all");
@@ -414,6 +416,7 @@ export function Pools() {
             {displayed.map((pool) => (
               <div
                 key={pool.id}
+                onClick={() => navigate(`/pools/${pool.id}`)}
                 className="flex items-center px-4 py-[12px] border-b border-white/[0.04] hover:bg-white/[0.06] transition-colors cursor-pointer group min-w-[620px]"
               >
                 {/* Pool */}
