@@ -391,7 +391,7 @@ export function Pools() {
             </div>
             <div className="w-[15%] min-w-[110px]">
               <span className={H} style={{ fontWeight: 500 }} onClick={() => toggleSort("ibt")}>
-                IBT
+                Default Token
                 <SortIcon active={sortKey === "ibt"} dir={sortDir} />
               </span>
             </div>
@@ -452,7 +452,7 @@ export function Pools() {
                   </div>
                 </div>
 
-                {/* IBT (Default Token) */}
+                {/* Default Token */}
                 <div className="w-[15%] min-w-[110px]">
                   <div className="flex items-center gap-2">
                     <SmallTokenCircle color={pool.ibtIconColor} char={pool.ibtIconChar} size={20} />
