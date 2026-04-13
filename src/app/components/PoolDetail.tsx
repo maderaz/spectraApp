@@ -293,6 +293,7 @@ export function PoolDetail() {
             <div className="flex flex-col gap-[6px]">
               <div className="flex items-center gap-1">
                 <span className="text-[10px] text-white/35 uppercase tracking-wider" style={{ fontWeight: 500 }}>Liquidity</span>
+                <InfoTooltip text="Total value locked in the pool." />
               </div>
               <span className="text-[12px] sm:text-[13px] text-white" style={{ fontWeight: 400 }}>$9,399,611</span>
             </div>
@@ -321,16 +322,19 @@ export function PoolDetail() {
             <ChangePill value="+0.12%" color="green" />
           </div>
           <div className="flex items-center gap-2.5 px-5 border-r border-white/[0.06] shrink-0">
-            <span className="text-[11px] text-white/35 leading-none" style={{ fontWeight: 400 }}>30d Volume</span>
-            <span className="text-[12px] text-white leading-none" style={{ fontWeight: 600 }}>$7M</span>
+            <span className="text-[11px] text-white/35 leading-none" style={{ fontWeight: 400 }}>24h Volume</span>
+            <span className="text-[12px] text-white leading-none" style={{ fontWeight: 600 }}>$420K</span>
+            <ChangePill value="+5%" color="green" />
           </div>
           <div className="flex items-center gap-2.5 px-5 border-r border-white/[0.06] shrink-0">
             <span className="text-[11px] text-white/35 leading-none" style={{ fontWeight: 400 }}>Underlying APY</span>
             <span className="text-[12px] text-[#6988ff] leading-none" style={{ fontWeight: 600 }}>2.83%</span>
+            <ChangePill value="+5.66%" color="green" />
           </div>
           <div className="flex items-center gap-2.5 px-5 shrink-0">
             <span className="text-[11px] text-white/35 leading-none" style={{ fontWeight: 400 }}>Implied APY</span>
             <span className="text-[12px] text-[#00f99b] leading-none" style={{ fontWeight: 600 }}>5.61%</span>
+            <ChangePill value="+0%" color="neutral" />
           </div>
           <div className="flex-1 min-w-[20px]" />
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
