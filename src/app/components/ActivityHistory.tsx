@@ -224,35 +224,27 @@ export function ActivityHistory() {
           {isRewardsView ? (
             /* ═══ REWARDS CLAIMS VIEW ═══ */
             <>
-              <div className="flex items-center px-4 py-[10px] border-b border-white/[0.06] shrink-0 min-w-[500px]">
-                <div className="w-[18%] min-w-[80px]"><span className={TH} style={{ fontWeight: 500 }}>Time</span></div>
-                <div className="w-[14%] min-w-[60px]"><span className={TH} style={{ fontWeight: 500 }}>Type</span></div>
-                <div className="w-[22%] min-w-[120px]"><span className={TH} style={{ fontWeight: 500 }}>Product</span></div>
-                <div className="w-[16%] min-w-[80px]"><span className={TH} style={{ fontWeight: 500 }}>Token</span></div>
-                <div className="w-[14%] min-w-[80px]"><span className={TH} style={{ fontWeight: 500 }}>Amount</span></div>
+              <div className="flex items-center px-4 py-[10px] border-b border-white/[0.06] shrink-0 min-w-[400px]">
+                <div className="w-[20%] min-w-[80px]"><span className={TH} style={{ fontWeight: 500 }}>Time</span></div>
+                <div className="w-[15%] min-w-[60px]"><span className={TH} style={{ fontWeight: 500 }}>Type</span></div>
+                <div className="w-[20%] min-w-[80px]"><span className={TH} style={{ fontWeight: 500 }}>Token</span></div>
+                <div className="w-[20%] min-w-[80px]"><span className={TH} style={{ fontWeight: 500 }}>Amount</span></div>
                 <div className="flex-1 min-w-[70px]"><span className={TH} style={{ fontWeight: 500 }}>Value</span></div>
               </div>
               <div className="flex-1 overflow-y-auto scrollbar-hide">
                 {filteredRewards.map((r) => (
-                  <div key={r.id} className="flex items-center px-4 py-[12px] border-b border-white/[0.04] hover:bg-white/[0.06] transition-colors min-w-[500px]">
-                    <div className="w-[18%] min-w-[80px]">
+                  <div key={r.id} className="flex items-center px-4 py-[12px] border-b border-white/[0.04] hover:bg-white/[0.06] transition-colors min-w-[400px]">
+                    <div className="w-[20%] min-w-[80px]">
                       <a href={`https://etherscan.io/tx/${r.txHash}`} target="_blank" rel="noopener noreferrer"
                         className="text-[13px] text-white/50 hover:text-white/70 transition-colors" style={{ fontWeight: 400, borderBottom: "1px dotted rgba(255,255,255,0.12)" }}>
                         {r.time}
                       </a>
                     </div>
-                    <div className="w-[14%] min-w-[60px]">
+                    <div className="w-[15%] min-w-[60px]">
                       <span className="text-[11px] px-2 py-[2px] rounded-full" style={{ fontWeight: 500, backgroundColor: "#6988ff15", color: "#6988ff" }}>Claim</span>
                     </div>
-                    <div className="w-[22%] min-w-[120px]">
-                      <div className="flex items-center gap-2">
-                        <NetworkIcon networkId={r.network} size={14} />
-                        <span className="text-[13px] text-white" style={{ fontWeight: 500 }}>{r.product}</span>
-                        <span className="text-[10px] text-white/20" style={{ fontWeight: 400 }}>{r.productType === "metavault" ? "MV" : "Pool"}</span>
-                      </div>
-                    </div>
-                    <div className="w-[16%] min-w-[80px]"><span className="text-[13px] text-[#b8a4ff]" style={{ fontWeight: 500 }}>{r.token}</span></div>
-                    <div className="w-[14%] min-w-[80px]"><span className="text-[13px] text-white/70" style={{ fontWeight: 400 }}>{r.amount}</span></div>
+                    <div className="w-[20%] min-w-[80px]"><span className="text-[13px] text-[#b8a4ff]" style={{ fontWeight: 500 }}>{r.token}</span></div>
+                    <div className="w-[20%] min-w-[80px]"><span className="text-[13px] text-white/70" style={{ fontWeight: 400 }}>{r.amount}</span></div>
                     <div className="flex-1 min-w-[70px]"><span className="text-[13px] text-white" style={{ fontWeight: 500 }}>{r.value}</span></div>
                   </div>
                 ))}
