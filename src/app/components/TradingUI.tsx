@@ -192,9 +192,9 @@ export function TradingUI() {
   }, []);
 
   return (
-    <div className="flex-1 min-w-0 overflow-auto scrollbar-hide font-['Inter']">
+    <div className="flex-1 min-w-0 font-['Inter']">
       {/* ═══ TERMINAL SHELL ═══ */}
-      <div className="flex flex-col h-full min-h-screen">
+      <div className="flex flex-col min-h-full">
 
         {/* ── TOP BAR: Token identity + stats ── */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-0 px-3 sm:px-5 py-3 border-b border-white/[0.06]">

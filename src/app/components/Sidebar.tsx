@@ -732,7 +732,7 @@ export function Sidebar() {
       )}
 
       {/* ── Desktop Sidebar ── */}
-      <aside className="hidden xl:flex flex-col w-[232px] shrink-0 bg-[#191919] border-r border-white/[0.06] h-screen sticky top-0 overflow-y-auto scrollbar-hide">
+      <aside className="hidden xl:flex flex-col w-[232px] shrink-0 bg-[#191919] border-r border-white/[0.06] h-full overflow-y-auto scrollbar-hide">
         <SidebarContent />
       </aside>
     </>
