@@ -1,6 +1,7 @@
 import { useState, useMemo, useCallback } from "react";
 import { SpectraIcon, EthereumIcon } from "./TokenIcons";
 import { ALL_NETWORKS } from "./FilterDropdowns";
+import { TokenCircle } from "./shared/TableIcons";
 
 // ─── Types ───
 type TabKey = "pt" | "yt" | "lp" | "mv" | "rewards";
@@ -268,8 +269,8 @@ function FixedYieldTooltip({ value }: { value: number }) {
   const [show, setShow] = useState(false);
   const formatted = `$${Math.abs(value).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   return (
-    <div className="relative inline-block" onMouseEnter={() => setShow(true)} onMouseLeave={() => setShow(false)}>
-      <span className="text-[10px] text-white/30 cursor-default" style={{ fontWeight: 400 }}>
+    <span className="relative" onMouseEnter={() => setShow(true)} onMouseLeave={() => setShow(false)}>
+      <span className="text-[10px] text-white/30 cursor-default leading-none" style={{ fontWeight: 400 }}>
         ≈{formatted}
       </span>
       {show && (
@@ -279,7 +280,7 @@ function FixedYieldTooltip({ value }: { value: number }) {
           </span>
         </div>
       )}
-    </div>
+    </span>
   );
 }
 
@@ -632,6 +633,14 @@ function RewardsTab() {
 
   return (
     <div>
+      {/* Column headers */}
+      <div className={`${ROW} border-b border-white/[0.06]`}>
+        <div className="w-[30%] min-w-[120px]"><span className={H} style={{ fontWeight: 500 }}>Token</span></div>
+        <div className="w-[25%] min-w-[90px]"><span className={H} style={{ fontWeight: 500 }}>Amount</span></div>
+        <div className="w-[25%] min-w-[70px]"><span className={H} style={{ fontWeight: 500 }}>Value</span></div>
+        <div className="flex-1 min-w-[70px] text-right"><span className={H} style={{ fontWeight: 500 }}>Action</span></div>
+      </div>
+
       {grouped.map((group) => (
         <div key={group.networkId}>
           {/* Per-network Claim All header */}
@@ -651,9 +660,12 @@ function RewardsTab() {
 
           {/* Reward rows for this network */}
           {group.rewards.map((rew, i) => (
-            <div key={rew.id} className={`${ROW} ${i % 2 === 1 ? "bg-white/[0.02]" : ""} border-b border-white/[0.04]`}>
+            <div key={rew.id} className={`${ROW} ${i % 2 === 1 ? "bg-white/[0.02]" : ""} border-b border-white/[0.04] hover:bg-white/[0.06] transition-colors`}>
               <div className="w-[30%] min-w-[120px]">
-                <span className="text-[12px] sm:text-[13px] text-[#b8a4ff]" style={{ fontWeight: 500 }}>{rew.token}</span>
+                <div className="flex items-center gap-2">
+                  <TokenCircle color={rew.token === "SPECTRA" ? "#00f99b" : rew.token === "sGHO" ? "#a855f7" : rew.token === "wstETH" ? "#6366f1" : "#f97316"} char={rew.token[0]} size={22} />
+                  <span className="text-[12px] sm:text-[13px] text-[#b8a4ff]" style={{ fontWeight: 500 }}>{rew.token}</span>
+                </div>
               </div>
               <div className="w-[25%] min-w-[90px]">
                 <span className={`${C} text-white/70`} style={{ fontWeight: 400 }}>{rew.amount}</span>
@@ -662,8 +674,8 @@ function RewardsTab() {
                 <span className={C} style={{ fontWeight: 500 }}>{rew.value}</span>
               </div>
               <div className="flex-1 min-w-[70px] text-right">
-                <button className="bg-[#00f99b]/10 hover:bg-[#00f99b]/20 border border-[#00f99b]/20 rounded-md px-2.5 py-[3px] transition-all">
-                  <span className="text-[10px] text-[#00f99b]" style={{ fontWeight: 500 }}>Claim</span>
+                <button className="hover:text-[#00f99b]/80 transition-colors px-2.5 py-[3px]">
+                  <span className="text-[10px] text-[#00f99b]" style={{ fontWeight: 500, borderBottom: "1px dotted rgba(0,249,155,0.3)" }}>Claim</span>
                 </button>
               </div>
             </div>

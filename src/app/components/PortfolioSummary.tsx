@@ -64,15 +64,9 @@ export function PortfolioSummary() {
           <span className="text-[10px] text-white/35 uppercase tracking-wider" style={{ fontWeight: 500 }}>
             Total Portfolio Value
           </span>
-          <div className="flex items-baseline gap-3 flex-wrap">
-            <span className="text-[28px] text-white" style={{ fontWeight: 600 }}>
-              <AnimatedValue target={48545.55} prefix="$" />
-            </span>
-            <div className="flex items-center gap-2">
-              <span className="text-[13px] text-[#00f99b]" style={{ fontWeight: 500 }}>+$187.56</span>
-              <ChangePill value="+0.39%" positive />
-            </div>
-          </div>
+          <span className="text-[28px] text-white" style={{ fontWeight: 600 }}>
+            <AnimatedValue target={48545.55} prefix="$" />
+          </span>
         </div>
       </div>
 
