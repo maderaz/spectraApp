@@ -438,8 +438,8 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
         </button>
       </div>
 
-      {/* Navigation — no vertical scroll */}
-      <nav className="flex-1 px-5 pt-1 pb-2">
+      {/* Navigation */}
+      <nav className="flex-1 min-h-0 overflow-y-auto scrollbar-hide px-5 pt-1 pb-2">
         {NAV_SECTIONS.map((section, sIdx) => {
           const isCollapsed = collapsed[section.key] ?? false;
           const isCollapsible = section.collapsible;
@@ -732,7 +732,7 @@ export function Sidebar() {
       )}
 
       {/* ── Desktop Sidebar ── */}
-      <aside className="hidden xl:flex flex-col w-[232px] shrink-0 bg-[#191919] border-r border-white/[0.06] h-screen sticky top-0 overflow-hidden">
+      <aside className="hidden xl:flex flex-col w-[232px] shrink-0 bg-[#191919] border-r border-white/[0.06] h-screen sticky top-0 overflow-y-auto scrollbar-hide">
         <SidebarContent />
       </aside>
     </>
