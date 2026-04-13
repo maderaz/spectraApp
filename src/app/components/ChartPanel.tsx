@@ -473,7 +473,7 @@ function OrderBookView({ assetType }: { assetType: AssetType }) {
         {[...asks].reverse().map((level, i) => {
           const barWidth = (level.size / maxSize) * 100;
           return (
-            <div key={`ask-${i}`} className="relative flex items-center px-3 h-[28px] group hover:bg-white/[0.03] transition-colors">
+            <div key={`ask-${i}`} className="relative flex items-center px-3 h-[28px] group hover:bg-white/[0.07] transition-colors">
               <div
                 className="absolute right-0 top-0 bottom-0 opacity-[0.08]"
                 style={{ width: `${barWidth}%`, backgroundColor: "#ef4444" }}
@@ -517,7 +517,7 @@ function OrderBookView({ assetType }: { assetType: AssetType }) {
         {bids.map((level, i) => {
           const barWidth = (level.size / maxSize) * 100;
           return (
-            <div key={`bid-${i}`} className="relative flex items-center px-3 h-[28px] group hover:bg-white/[0.03] transition-colors">
+            <div key={`bid-${i}`} className="relative flex items-center px-3 h-[28px] group hover:bg-white/[0.07] transition-colors">
               <div
                 className="absolute right-0 top-0 bottom-0 opacity-[0.08]"
                 style={{ width: `${barWidth}%`, backgroundColor: "#22c55e" }}
@@ -768,11 +768,11 @@ export function ChartPanel({ assetType, flat }: { assetType: AssetType; flat?: b
 
         {/* Right: APY & Tools dropdowns */}
         <div className="flex items-center gap-2">
-          <button className="flex items-center gap-[6px] px-2 py-[3px] rounded-[5px] hover:bg-white/[0.04] transition-colors">
+          <button className="flex items-center gap-[6px] px-2 py-[3px] rounded-[5px] hover:bg-white/[0.08] transition-colors">
             <span className="font-['Inter'] text-[11px] text-white/50" style={{ fontWeight: 500 }}>APY</span>
             <ChevronDown />
           </button>
-          <button className="flex items-center gap-[6px] px-2 py-[3px] rounded-[5px] hover:bg-white/[0.04] transition-colors">
+          <button className="flex items-center gap-[6px] px-2 py-[3px] rounded-[5px] hover:bg-white/[0.08] transition-colors">
             <span className="font-['Inter'] text-[11px] text-white/50" style={{ fontWeight: 500 }}>Tools</span>
             <ChevronDown />
           </button>

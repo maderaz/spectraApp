@@ -230,7 +230,7 @@ export function LiquidityPanel({ assetType, onAssetTypeChange, onPlaceOrder, fla
               className={`flex-1 py-[7px] text-center font-['Inter'] text-[13px] transition-all ${
                 isActive
                   ? "bg-white/[0.08] text-white"
-                  : "text-white/40 hover:text-white/60 hover:bg-white/[0.04]"
+                  : "text-white/40 hover:text-white/60 hover:bg-white/[0.08]"
               } ${i > 0 ? "border-l border-white/[0.08]" : ""}`}
               style={{ fontWeight: isActive ? 500 : 400 }}
               onClick={() => onAssetTypeChange(type)}
@@ -352,7 +352,7 @@ export function LiquidityPanel({ assetType, onAssetTypeChange, onPlaceOrder, fla
                     const pct = label === "25%" ? 0.25 : label === "50%" ? 0.5 : 1;
                     setInputAmount((mockBalance * pct).toString());
                   }}
-                  className="font-['Inter'] text-[10px] text-white/35 hover:text-white/55 px-[6px] py-[2px] rounded-[4px] hover:bg-white/[0.04] transition-all"
+                  className="font-['Inter'] text-[10px] text-white/35 hover:text-white/55 px-[6px] py-[2px] rounded-[4px] hover:bg-white/[0.08] transition-all"
                   style={{ fontWeight: 400 }}
                 >
                   {label}
@@ -469,7 +469,7 @@ export function LiquidityPanel({ assetType, onAssetTypeChange, onPlaceOrder, fla
                       <button
                         key={unit}
                         className={`w-full text-left px-[13px] py-[8px] font-['Inter'] text-[12px] transition-colors ${
-                          expiryUnit === unit ? "text-white bg-white/[0.06]" : "text-white/40 hover:text-white/60 hover:bg-white/[0.03]"
+                          expiryUnit === unit ? "text-white bg-white/[0.06]" : "text-white/40 hover:text-white/60 hover:bg-white/[0.07]"
                         }`}
                         style={{ fontWeight: expiryUnit === unit ? 500 : 400 }}
                         onClick={() => {

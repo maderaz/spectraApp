@@ -220,7 +220,7 @@ export function FixedRates() {
                     className={`px-2 sm:px-3 py-[7px] text-[12px] transition-all relative ${
                       active
                         ? "bg-white/[0.08] text-white"
-                        : "text-white/40 hover:text-white/60 hover:bg-white/[0.04]"
+                        : "text-white/40 hover:text-white/60 hover:bg-white/[0.08]"
                     } ${i > 0 ? "border-l border-white/[0.08]" : ""}`}
                     style={{ fontWeight: active ? 500 : 400 }}
                   >
@@ -322,7 +322,7 @@ export function FixedRates() {
               <div
                 key={pool.id}
                 onClick={() => navigate(`/?asset=PT&pool=${pool.id}`)}
-                className="flex items-center px-4 py-[12px] border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors cursor-pointer group min-w-[620px]"
+                className="flex items-center px-4 py-[12px] border-b border-white/[0.04] hover:bg-white/[0.06] transition-colors cursor-pointer group min-w-[620px]"
               >
                 {/* Pool */}
                 <div className="w-[22%] min-w-[160px]">

@@ -738,7 +738,7 @@ function DepositPanel({ vault }: { vault: VaultData }) {
         <div className="w-px h-6 bg-white/15" />
         {isDeposit ? (
           /* Deposit: base token with dropdown chevron */
-          <div className="flex items-center gap-2 px-3 h-full cursor-pointer hover:bg-white/[0.02] rounded-r-[8px] transition-colors">
+          <div className="flex items-center gap-2 px-3 h-full cursor-pointer hover:bg-white/[0.06] rounded-r-[8px] transition-colors">
             <TokenIcon symbol={vault.depositSymbol} size={24} />
             <span className="text-white text-[13px]" style={{ fontWeight: 500 }}>{vault.depositSymbol}</span>
             <ChevronDown opacity={0.3} />

@@ -343,7 +343,7 @@ export function PTBridge() {
                                     className={`w-full flex items-center gap-2.5 px-3 transition-colors ${
                                       isDisabled
                                         ? "opacity-35 cursor-not-allowed border-t border-white/[0.04] py-2"
-                                        : `hover:bg-white/[0.04] py-2.5 ${sourceNetwork === net ? "bg-white/[0.04]" : ""}`
+                                        : `hover:bg-white/[0.08] py-2.5 ${sourceNetwork === net ? "bg-white/[0.04]" : ""}`
                                     }`}
                                   >
                                     <NetworkIcon network={net} size={20} />
@@ -394,7 +394,7 @@ export function PTBridge() {
                                     className={`w-full flex items-center gap-2.5 px-3 transition-colors ${
                                       isDisabled
                                         ? "opacity-35 cursor-not-allowed border-t border-white/[0.04] py-2"
-                                        : `hover:bg-white/[0.04] py-2.5 ${destNetwork === net ? "bg-white/[0.04]" : ""}`
+                                        : `hover:bg-white/[0.08] py-2.5 ${destNetwork === net ? "bg-white/[0.04]" : ""}`
                                     }`}
                                   >
                                     <NetworkIcon network={net} size={20} />
@@ -445,7 +445,7 @@ export function PTBridge() {
                                       className={`w-full flex items-center gap-2.5 px-3 transition-colors ${
                                         isDisabled
                                           ? "opacity-35 cursor-not-allowed border-t border-white/[0.04] py-2"
-                                          : `hover:bg-white/[0.04] py-2.5 ${sourceNetwork === net ? "bg-white/[0.04]" : ""}`
+                                          : `hover:bg-white/[0.08] py-2.5 ${sourceNetwork === net ? "bg-white/[0.04]" : ""}`
                                       }`}
                                     >
                                       <NetworkIcon network={net} size={20} />
@@ -501,7 +501,7 @@ export function PTBridge() {
                                       className={`w-full flex items-center gap-2.5 px-3 transition-colors ${
                                         isDisabled
                                           ? "opacity-35 cursor-not-allowed border-t border-white/[0.04] py-2"
-                                          : `hover:bg-white/[0.04] py-2.5 ${destNetwork === net ? "bg-white/[0.04]" : ""}`
+                                          : `hover:bg-white/[0.08] py-2.5 ${destNetwork === net ? "bg-white/[0.04]" : ""}`
                                       }`}
                                     >
                                       <NetworkIcon network={net} size={20} />
@@ -554,7 +554,7 @@ export function PTBridge() {
                         <div className="w-[40%] sm:w-[30%] border-l border-white/[0.06]">
                           <button
                             onClick={() => { setShowTokenDropdown(!showTokenDropdown); setShowNetworkDropdown(false); }}
-                            className="w-full h-full flex items-center justify-between gap-1 px-3 hover:bg-white/[0.03] transition-colors rounded-r-[10px]"
+                            className="w-full h-full flex items-center justify-between gap-1 px-3 hover:bg-white/[0.07] transition-colors rounded-r-[10px]"
                           >
                             {selectedToken ? (
                               <div className="flex items-center gap-2 min-w-0">
@@ -604,7 +604,7 @@ export function PTBridge() {
                                         setSelectedToken(token);
                                         setShowTokenDropdown(false);
                                       }}
-                                      className={`w-full flex items-center gap-3 px-4 py-2.5 hover:bg-white/[0.04] transition-colors ${
+                                      className={`w-full flex items-center gap-3 px-4 py-2.5 hover:bg-white/[0.08] transition-colors ${
                                         selectedToken?.id === token.id ? "bg-white/[0.04]" : ""
                                       }`}
                                     >
@@ -648,7 +648,7 @@ export function PTBridge() {
                                         setSelectedToken(token);
                                         setShowTokenDropdown(false);
                                       }}
-                                      className={`w-full flex items-center gap-3 px-4 py-2.5 hover:bg-white/[0.04] transition-colors opacity-60 ${
+                                      className={`w-full flex items-center gap-3 px-4 py-2.5 hover:bg-white/[0.08] transition-colors opacity-60 ${
                                         selectedToken?.id === token.id ? "bg-white/[0.04] opacity-100" : ""
                                       }`}
                                     >

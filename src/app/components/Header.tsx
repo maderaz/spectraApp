@@ -47,10 +47,10 @@ export function Header() {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <button className="border border-[#313032] rounded px-[8px] py-[4px] hover:bg-white/[0.04] hover:border-white/[0.12] transition-colors">
+            <button className="border border-[#313032] rounded px-[8px] py-[4px] hover:bg-white/[0.08] hover:border-white/[0.12] transition-colors">
               <span className="font-['Inter'] text-[12px] text-white" style={{ fontWeight: 300 }}>Details</span>
             </button>
-            <button className="border border-[#313032] rounded px-[8px] py-[4px] hover:bg-white/[0.04] hover:border-white/[0.12] transition-colors">
+            <button className="border border-[#313032] rounded px-[8px] py-[4px] hover:bg-white/[0.08] hover:border-white/[0.12] transition-colors">
               <span className="font-['Inter'] text-[12px] text-white" style={{ fontWeight: 300 }}>Tokenize</span>
             </button>
           </div>
@@ -87,7 +87,7 @@ export function Header() {
             className={`flex items-center gap-1.5 basis-0 grow justify-center rounded-[6px] px-3 py-[7px] transition-colors ${
               activeTab === "pool"
                 ? "bg-[rgba(83,56,158,0.1)] border border-[#bda5ff]/30"
-                : "border border-transparent hover:bg-white/[0.04]"
+                : "border border-transparent hover:bg-white/[0.08]"
             }`}
           >
             <PoolIcon />
@@ -105,7 +105,7 @@ export function Header() {
             className={`flex items-center gap-1.5 basis-0 grow justify-center rounded-[6px] px-3 py-[7px] transition-colors ${
               activeTab === "trade"
                 ? "bg-[rgba(20,209,138,0.1)] border border-[#14d18a]/30"
-                : "border border-transparent hover:bg-white/[0.04]"
+                : "border border-transparent hover:bg-white/[0.08]"
             }`}
           >
             <div className="flex items-center gap-0.5">
@@ -172,7 +172,7 @@ export function Header() {
               className={`flex items-center gap-1.5 basis-0 grow justify-center rounded-[6px] px-2 py-[5px] transition-colors ${
                 activeTab === "pool"
                   ? "bg-[rgba(83,56,158,0.1)] border border-[#bda5ff]/30"
-                  : "border border-transparent hover:bg-white/[0.04]"
+                  : "border border-transparent hover:bg-white/[0.08]"
               }`}
             >
               <PoolIcon />
@@ -190,7 +190,7 @@ export function Header() {
               className={`flex items-center gap-1.5 basis-0 grow justify-center rounded-[6px] px-2 py-[5px] transition-colors ${
                 activeTab === "trade"
                   ? "bg-[rgba(20,209,138,0.1)] border border-[#14d18a]/30"
-                  : "border border-transparent hover:bg-white/[0.04]"
+                  : "border border-transparent hover:bg-white/[0.08]"
               }`}
             >
               <div className="flex items-center gap-[3px]">
@@ -215,10 +215,10 @@ export function Header() {
             <span className="font-['Inter'] text-[14px] text-white" style={{ fontWeight: 300 }}>Trade yield evolution of sGHO with Principal and Yield Tokens.</span>
           </div>
           <div className="flex items-center gap-4">
-            <button className="border border-[#313032] rounded px-[9px] py-[5px] hover:bg-white/[0.04] hover:border-white/[0.12] transition-colors">
+            <button className="border border-[#313032] rounded px-[9px] py-[5px] hover:bg-white/[0.08] hover:border-white/[0.12] transition-colors">
               <span className="font-['Inter'] text-[14px] text-white text-center" style={{ fontWeight: 300 }}>Details</span>
             </button>
-            <button className="border border-[#313032] rounded px-[9px] py-[5px] hover:bg-white/[0.04] hover:border-white/[0.12] transition-colors">
+            <button className="border border-[#313032] rounded px-[9px] py-[5px] hover:bg-white/[0.08] hover:border-white/[0.12] transition-colors">
               <span className="font-['Inter'] text-[14px] text-white text-center" style={{ fontWeight: 300 }}>Tokenize</span>
             </button>
           </div>

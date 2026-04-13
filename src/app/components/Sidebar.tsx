@@ -333,7 +333,7 @@ function NavItemRow({ item, isRouteActive, onNavigate }: { item: NavItem; isRout
           ? ""
           : item.dimmed
           ? "opacity-100"
-          : "hover:bg-white/[0.03]"
+          : "hover:bg-white/[0.07]"
       }`}
     >
       <div className="shrink-0 w-6 h-6 flex items-center justify-center">
@@ -491,7 +491,7 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
       <div className="px-5 pb-4 pt-1.5 border-t border-white/[0.06] flex flex-col gap-0">
         <button
           onClick={() => handleNavigate("/brand-components")}
-          className={`flex items-center gap-2 w-full py-[4px] hover:bg-white/[0.03] rounded-[6px] transition-colors text-left ${
+          className={`flex items-center gap-2 w-full py-[4px] hover:bg-white/[0.07] rounded-[6px] transition-colors text-left ${
             location.pathname === "/brand-components" ? "" : ""
           }`}
         >
@@ -507,13 +507,13 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
             Brand Components
           </span>
         </button>
-        <button className="flex items-center gap-2 w-full py-[4px] hover:bg-white/[0.03] rounded-[6px] transition-colors text-left">
+        <button className="flex items-center gap-2 w-full py-[4px] hover:bg-white/[0.07] rounded-[6px] transition-colors text-left">
           <div className="shrink-0 w-5 h-5 flex items-center justify-center">
             <SettingsIcon />
           </div>
           <span className="text-[11px] text-white/50" style={{ fontWeight: 400 }}>Settings</span>
         </button>
-        <button className="flex items-center gap-2 w-full py-[4px] hover:bg-white/[0.03] rounded-[6px] transition-colors text-left">
+        <button className="flex items-center gap-2 w-full py-[4px] hover:bg-white/[0.07] rounded-[6px] transition-colors text-left">
           <div className="shrink-0 w-5 h-5 flex items-center justify-center">
             <SupportIcon />
           </div>
@@ -601,7 +601,7 @@ export function Sidebar() {
             <button
               onClick={() => handleNav("/pools")}
               className={`flex items-center gap-3 w-full px-5 py-3.5 transition-colors ${
-                isActive("/pools") ? "bg-white/[0.06]" : "hover:bg-white/[0.04] active:bg-white/[0.06]"
+                isActive("/pools") ? "bg-white/[0.06]" : "hover:bg-white/[0.08] active:bg-white/[0.06]"
               }`}
             >
               <PoolsIcon active={isActive("/pools")} />
@@ -613,7 +613,7 @@ export function Sidebar() {
             <button
               onClick={() => handleNav("/metavaults")}
               className={`flex items-center gap-3 w-full px-5 py-3.5 transition-colors ${
-                isActive("/metavaults") ? "bg-white/[0.06]" : "hover:bg-white/[0.04] active:bg-white/[0.06]"
+                isActive("/metavaults") ? "bg-white/[0.06]" : "hover:bg-white/[0.08] active:bg-white/[0.06]"
               }`}
             >
               <MetaVaultsIcon active={isActive("/metavaults")} />
