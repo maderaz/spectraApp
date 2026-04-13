@@ -186,7 +186,7 @@ export function NetworkDropdown({
               <button
                 key={net.id}
                 onClick={() => toggle(net.id)}
-                className="flex items-center justify-between w-full px-4 py-[10px] hover:bg-white/[0.04] transition-colors"
+                className="flex items-center justify-between w-full px-4 py-[10px] hover:bg-white/[0.08] transition-colors"
               >
                 <div className="flex items-center gap-3">
                   <NetworkCircle network={net} size={28} />
@@ -271,7 +271,7 @@ export function FiltersDropdown({
             <button
               key={item.key}
               onClick={() => onChange({ ...filters, [item.key]: !filters[item.key] })}
-              className="flex items-center justify-between w-full px-4 py-[12px] hover:bg-white/[0.04] transition-colors"
+              className="flex items-center justify-between w-full px-4 py-[12px] hover:bg-white/[0.08] transition-colors"
             >
               <span className="text-[13px] text-white" style={{ fontWeight: 400 }}>
                 {item.label}

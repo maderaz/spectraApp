@@ -78,7 +78,7 @@ function BottomStatusBar() {
         <span className="text-[10px] text-white/25" style={{ fontWeight: 400 }}>Pool</span>
         <button
           onClick={handleCopy}
-          className="flex items-center gap-1.5 hover:bg-white/[0.04] rounded px-1 py-0.5 transition-colors group"
+          className="flex items-center gap-1.5 hover:bg-white/[0.08] rounded px-1 py-0.5 transition-colors group"
         >
           <span className="text-[10px] text-white/50 font-mono group-hover:text-white/70 transition-colors" style={{ fontWeight: 500 }}>
             {poolAddress}

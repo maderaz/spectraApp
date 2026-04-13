@@ -203,7 +203,7 @@ export function MetaVaults() {
             </p>
           </div>
           <div className="flex items-center gap-3 shrink-0">
-            <button className="flex items-center gap-2 px-4 py-[7px] rounded-[8px] border border-white/[0.08] hover:bg-white/[0.04] transition-colors">
+            <button className="flex items-center gap-2 px-4 py-[7px] rounded-[8px] border border-white/[0.08] hover:bg-white/[0.08] transition-colors">
               <HelpIcon />
               <span className="text-white text-[13px]" style={{ fontWeight: 500 }}>Help</span>
             </button>
@@ -219,14 +219,14 @@ export function MetaVaults() {
           <div className="flex items-center bg-[#25272b] rounded-[6px] overflow-hidden border border-white/[0.06]">
             <button
               onClick={() => setView("grid")}
-              className={`p-2 transition-colors ${view === "grid" ? "bg-white/[0.08]" : "hover:bg-white/[0.04]"}`}
+              className={`p-2 transition-colors ${view === "grid" ? "bg-white/[0.08]" : "hover:bg-white/[0.08]"}`}
             >
               <GridViewIcon active={view === "grid"} />
             </button>
             <div className="w-px h-4 bg-white/[0.06]" />
             <button
               onClick={() => setView("list")}
-              className={`p-2 transition-colors ${view === "list" ? "bg-white/[0.08]" : "hover:bg-white/[0.04]"}`}
+              className={`p-2 transition-colors ${view === "list" ? "bg-white/[0.08]" : "hover:bg-white/[0.08]"}`}
             >
               <ListViewIcon active={view === "list"} />
             </button>
@@ -315,7 +315,7 @@ export function MetaVaults() {
             {VAULTS.map((vault) => (
               <button
                 key={vault.id}
-                className="flex items-center px-5 py-[12px] border-b border-white/[0.06] hover:bg-white/[0.02] transition-colors text-left"
+                className="flex items-center px-5 py-[12px] border-b border-white/[0.06] hover:bg-white/[0.06] transition-colors text-left"
               >
                 {/* Vault */}
                 <div className="flex-[2] flex items-center gap-3 min-w-0">

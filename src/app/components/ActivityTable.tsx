@@ -485,7 +485,7 @@ function PositionsTable({ filter }: { filter: PositionFilter }) {
             // PT specific row
             if (filter === "PT") {
               return (
-                <div key={`pos-${item.token}`} className={`flex items-center ${ROW_H} ${ROW_MIN_H} ${i % 2 === 1 ? "bg-white/[0.03]" : ""} hover:bg-white/[0.03] transition-colors`}>
+                <div key={`pos-${item.token}`} className={`flex items-center ${ROW_H} ${ROW_MIN_H} ${i % 2 === 1 ? "bg-white/[0.03]" : ""} hover:bg-white/[0.07] transition-colors`}>
                   <div className="flex-1 min-w-[110px] flex items-center gap-1.5">
                     <span className="inline-block w-[4px] h-[4px] rounded-full shrink-0" style={{ backgroundColor: typeColor }} />
                     <span className={BODY_CELL} style={{ fontWeight: 500 }}>{item.token}</span>
@@ -517,7 +517,7 @@ function PositionsTable({ filter }: { filter: PositionFilter }) {
             // YT specific row
             if (filter === "YT") {
               return (
-                <div key={`pos-${item.token}`} className={`flex items-center ${ROW_H} ${ROW_MIN_H} ${i % 2 === 1 ? "bg-white/[0.03]" : ""} hover:bg-white/[0.03] transition-colors`}>
+                <div key={`pos-${item.token}`} className={`flex items-center ${ROW_H} ${ROW_MIN_H} ${i % 2 === 1 ? "bg-white/[0.03]" : ""} hover:bg-white/[0.07] transition-colors`}>
                   <div className="flex-1 min-w-[110px] flex items-center gap-1.5">
                     <span className="inline-block w-[4px] h-[4px] rounded-full shrink-0" style={{ backgroundColor: typeColor }} />
                     <span className={BODY_CELL} style={{ fontWeight: 500 }}>{item.token}</span>
