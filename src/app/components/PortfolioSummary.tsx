@@ -2,9 +2,10 @@ import { useRef, useEffect } from "react";
 
 // ─── Allocation data ───
 const ALLOCATION = [
-  { label: "PT", value: 14245.22, pct: 44.9, color: "#00f99b" },
-  { label: "YT", value: 500.14, pct: 1.6, color: "#f4c071" },
-  { label: "LP", value: 16997.22, pct: 53.5, color: "#d65ce9" },
+  { label: "PT", value: 14245.22, pct: 29.4, color: "#00f99b" },
+  { label: "YT", value: 500.14, pct: 1.0, color: "#f4c071" },
+  { label: "LP", value: 16997.22, pct: 35.0, color: "#d65ce9" },
+  { label: "MV", value: 16724.53, pct: 34.5, color: "#ff9900" },
 ];
 
 function ChangePill({ value, positive }: { value: string; positive: boolean }) {
@@ -51,7 +52,7 @@ const BREAKDOWN = [
   { label: "YT Value", value: "$500.14", color: "#f4c071" },
   { label: "LP Value", value: "$16,997.22", color: "#d65ce9" },
   { label: "MV Value", value: "$16,724.53", color: "#ff9900" },
-  { label: "Claimable", value: "$12.84", color: "#6988ff" },
+  { label: "Claimable", value: "$58.10", color: "#6988ff" },
 ];
 
 export function PortfolioSummary() {
@@ -65,11 +66,11 @@ export function PortfolioSummary() {
           </span>
           <div className="flex items-baseline gap-3 flex-wrap">
             <span className="text-[28px] text-white" style={{ fontWeight: 600 }}>
-              <AnimatedValue target={31742.58} prefix="$" />
+              <AnimatedValue target={48525.21} prefix="$" />
             </span>
             <div className="flex items-center gap-2">
-              <span className="text-[13px] text-[#00f99b]" style={{ fontWeight: 500 }}>+$142.30</span>
-              <ChangePill value="+0.45%" positive />
+              <span className="text-[13px] text-[#00f99b]" style={{ fontWeight: 500 }}>+$187.56</span>
+              <ChangePill value="+0.39%" positive />
             </div>
           </div>
         </div>
