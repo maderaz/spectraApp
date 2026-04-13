@@ -295,6 +295,7 @@ function PTPositionsTab({ positions }: { positions: Position[] }) {
         case "balance": va = parseNum(a.balanceUsd); vb = parseNum(b.balanceUsd); break;
         case "redemption": va = parseNum(a.maturityRedemption); vb = parseNum(b.maturityRedemption); break;
         case "value": va = parseNum(a.maturityValue); vb = parseNum(b.maturityValue); break;
+        case "fixedYield": va = parseNum(a.maturityValue) - parseNum(a.balanceUsd); vb = parseNum(b.maturityValue) - parseNum(b.balanceUsd); break;
         case "expiry": va = parseDate(a.maturity); vb = parseDate(b.maturity); break;
         default: return 0;
       }
@@ -305,11 +306,12 @@ function PTPositionsTab({ positions }: { positions: Position[] }) {
   return (
     <div className="overflow-x-auto scrollbar-hide">
       <div className={`${ROW} border-b border-white/[0.06]`}>
-        <div className="w-[22%] min-w-[140px]"><SortableHeader label="Position" sortKey="position" currentSort={sort} onToggle={toggle} /></div>
-        <div className="w-[18%] min-w-[110px]"><SortableHeader label="Balance" sortKey="balance" currentSort={sort} onToggle={toggle} /></div>
-        <div className="w-[22%] min-w-[130px]"><SortableHeader label="Maturity Redemption" sortKey="redemption" currentSort={sort} onToggle={toggle} /></div>
-        <div className="w-[18%] min-w-[100px]"><SortableHeader label="Maturity Value" sortKey="value" currentSort={sort} onToggle={toggle} /></div>
-        <div className="flex-1 min-w-[90px]"><SortableHeader label="Expiry" sortKey="expiry" currentSort={sort} onToggle={toggle} /></div>
+        <div className="w-[20%] min-w-[140px]"><SortableHeader label="Position" sortKey="position" currentSort={sort} onToggle={toggle} /></div>
+        <div className="w-[16%] min-w-[100px]"><SortableHeader label="Balance" sortKey="balance" currentSort={sort} onToggle={toggle} /></div>
+        <div className="w-[20%] min-w-[130px]"><SortableHeader label="Maturity Redemption" sortKey="redemption" currentSort={sort} onToggle={toggle} /></div>
+        <div className="w-[14%] min-w-[90px]"><SortableHeader label="Maturity Value" sortKey="value" currentSort={sort} onToggle={toggle} /></div>
+        <div className="w-[14%] min-w-[90px]"><SortableHeader label="Fixed Yield" sortKey="fixedYield" currentSort={sort} onToggle={toggle} /></div>
+        <div className="flex-1 min-w-[80px]"><SortableHeader label="Expiry" sortKey="expiry" currentSort={sort} onToggle={toggle} /></div>
       </div>
 
       {sorted.length === 0 && (
@@ -318,29 +320,45 @@ function PTPositionsTab({ positions }: { positions: Position[] }) {
         </div>
       )}
 
-      {sorted.map((pos, i) => (
+      {sorted.map((pos, i) => {
+        const matVal = parseNum(pos.maturityValue);
+        const balVal = parseNum(pos.balanceUsd);
+        const fixedYield = matVal - balVal;
+        const fixedYieldPct = balVal > 0 ? (fixedYield / balVal) * 100 : 0;
+        return (
         <div key={pos.id} className={`${ROW} ${i % 2 === 1 ? "bg-white/[0.02]" : ""} hover:bg-white/[0.06] transition-colors`}>
-          <div className="w-[22%] min-w-[140px]"><PositionCell position={pos.position} accent={accent} /></div>
-          <div className="w-[18%] min-w-[110px]">
+          <div className="w-[20%] min-w-[140px]"><PositionCell position={pos.position} accent={accent} /></div>
+          <div className="w-[16%] min-w-[100px]">
             <div className="flex flex-col gap-[1px]">
               <span className={C} style={{ fontWeight: 500 }}>{pos.balanceAmount || pos.balance}</span>
               <span className="text-[10px] text-white/30" style={{ fontWeight: 400 }}>≈${pos.balanceUsd}</span>
             </div>
           </div>
-          <div className="w-[22%] min-w-[130px]">
+          <div className="w-[20%] min-w-[130px]">
             <div className="flex flex-col gap-[1px]">
               <span className={C} style={{ fontWeight: 500 }}>{pos.maturityRedemption}</span>
               <span className="text-[10px] text-white/30" style={{ fontWeight: 400 }}>≈{pos.maturityValue}</span>
             </div>
           </div>
-          <div className="w-[18%] min-w-[100px]">
+          <div className="w-[14%] min-w-[90px]">
             <span className="text-[12px] sm:text-[13px]" style={{ fontWeight: 500, color: accent }}>
               {pos.maturityValue}
             </span>
           </div>
-          <div className="flex-1 min-w-[90px]"><span className="text-[11px] text-white/40" style={{ fontWeight: 400 }}>{pos.maturity}</span></div>
+          <div className="w-[14%] min-w-[90px]">
+            <div className="flex flex-col gap-[1px]">
+              <span className="text-[12px] sm:text-[13px]" style={{ fontWeight: 500, color: fixedYield >= 0 ? "#00f99b" : "#ef6b6b" }}>
+                {fixedYield >= 0 ? "+" : ""}${Math.abs(fixedYield).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              </span>
+              <span className="text-[10px] text-white/30" style={{ fontWeight: 400 }}>
+                {fixedYieldPct >= 0 ? "+" : ""}{fixedYieldPct.toFixed(2)}%
+              </span>
+            </div>
+          </div>
+          <div className="flex-1 min-w-[80px]"><span className="text-[11px] text-white/40" style={{ fontWeight: 400 }}>{pos.maturity}</span></div>
         </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
@@ -508,7 +526,7 @@ function MVPositionsTab({ positions }: { positions: MVPosition[] }) {
         <div className="w-[18%] min-w-[120px]"><SortableHeader label="Balance" sortKey="balance" currentSort={sort} onToggle={toggle} /></div>
         <div className="w-[18%] min-w-[120px]"><SortableHeader label="Estimated Value" sortKey="estimated" currentSort={sort} onToggle={toggle} /></div>
         <div className="w-[14%] min-w-[80px]"><SortableHeader label="Max APY" sortKey="apy" currentSort={sort} onToggle={toggle} /></div>
-        <div className="flex-1 min-w-[70px]"><SortableHeader label="Base" sortKey="base" currentSort={sort} onToggle={toggle} /></div>
+        <div className="flex-1 min-w-[90px]"><SortableHeader label="Entry/Exit Asset" sortKey="base" currentSort={sort} onToggle={toggle} /></div>
       </div>
 
       {sorted.length === 0 && (
@@ -532,7 +550,7 @@ function MVPositionsTab({ positions }: { positions: MVPosition[] }) {
           </div>
           <div className="w-[18%] min-w-[120px]">
             <div className="flex flex-col gap-[1px]">
-              <span className={C} style={{ fontWeight: 500 }}>{pos.balanceAmount} <span className="text-white/40" style={{ fontWeight: 400 }}>{pos.balanceToken}</span></span>
+              <span className={C} style={{ fontWeight: 500 }}>{pos.balanceAmount}</span>
               <span className="text-[10px] text-white/30" style={{ fontWeight: 400 }}>≈${pos.balanceUsd}</span>
             </div>
           </div>
@@ -542,7 +560,7 @@ function MVPositionsTab({ positions }: { positions: MVPosition[] }) {
           <div className="w-[14%] min-w-[80px]">
             <span className="text-[12px] sm:text-[13px]" style={{ fontWeight: 500, color: accent }}>{pos.maxApy}</span>
           </div>
-          <div className="flex-1 min-w-[70px]">
+          <div className="flex-1 min-w-[90px]">
             <span className="text-[11px] text-white/40" style={{ fontWeight: 400 }}>{pos.base}</span>
           </div>
         </div>
@@ -565,7 +583,6 @@ function RewardsTab() {
         case "token": va = a.token; vb = b.token; break;
         case "amount": va = parseNum(a.amount); vb = parseNum(b.amount); break;
         case "value": va = parseNum(a.value); vb = parseNum(b.value); break;
-        case "epoch": va = a.epoch; vb = b.epoch; break;
         default: return 0;
       }
       return compare(va, vb, sort.dir!);
@@ -587,22 +604,20 @@ function RewardsTab() {
       <div className="overflow-x-auto">
         <div className={`${ROW} border-b border-white/[0.06]`}>
           <div className="w-[22%] min-w-[140px]"><SortableHeader label="Pool" sortKey="pool" currentSort={sort} onToggle={toggle} /></div>
-          <div className="w-[14%] min-w-[90px]"><SortableHeader label="Token" sortKey="token" currentSort={sort} onToggle={toggle} /></div>
-          <div className="w-[18%] min-w-[100px]"><SortableHeader label="Amount" sortKey="amount" currentSort={sort} onToggle={toggle} /></div>
-          <div className="w-[14%] min-w-[70px]"><SortableHeader label="Value" sortKey="value" currentSort={sort} onToggle={toggle} /></div>
-          <div className="w-[14%] min-w-[80px]"><SortableHeader label="Epoch" sortKey="epoch" currentSort={sort} onToggle={toggle} /></div>
+          <div className="w-[18%] min-w-[90px]"><SortableHeader label="Token" sortKey="token" currentSort={sort} onToggle={toggle} /></div>
+          <div className="w-[22%] min-w-[100px]"><SortableHeader label="Amount" sortKey="amount" currentSort={sort} onToggle={toggle} /></div>
+          <div className="w-[18%] min-w-[70px]"><SortableHeader label="Value" sortKey="value" currentSort={sort} onToggle={toggle} /></div>
           <div className="flex-1 min-w-[70px] text-right"><span className={H} style={{ fontWeight: 500 }}>Action</span></div>
         </div>
 
         {sorted.map((rew, i) => (
           <div key={rew.id} className={`${ROW} ${i % 2 === 1 ? "bg-white/[0.02]" : ""}`}>
             <div className="w-[22%] min-w-[140px]"><PoolCell pool={rew.pool} /></div>
-            <div className="w-[14%] min-w-[90px]">
+            <div className="w-[18%] min-w-[90px]">
               <span className="text-[12px] sm:text-[13px] text-[#b8a4ff]" style={{ fontWeight: 500 }}>{rew.token}</span>
             </div>
-            <div className="w-[18%] min-w-[100px]"><span className={`${C} text-white/70`} style={{ fontWeight: 400 }}>{rew.amount}</span></div>
-            <div className="w-[14%] min-w-[70px]"><span className={C} style={{ fontWeight: 500 }}>{rew.value}</span></div>
-            <div className="w-[14%] min-w-[80px]"><span className="text-[11px] text-white/40" style={{ fontWeight: 400 }}>{rew.epoch}</span></div>
+            <div className="w-[22%] min-w-[100px]"><span className={`${C} text-white/70`} style={{ fontWeight: 400 }}>{rew.amount}</span></div>
+            <div className="w-[18%] min-w-[70px]"><span className={C} style={{ fontWeight: 500 }}>{rew.value}</span></div>
             <div className="flex-1 min-w-[70px] text-right">
               <button className="bg-[#00f99b]/10 hover:bg-[#00f99b]/20 border border-[#00f99b]/20 rounded-md px-2.5 py-[3px] transition-all">
                 <span className="text-[10px] text-[#00f99b]" style={{ fontWeight: 500 }}>Claim</span>

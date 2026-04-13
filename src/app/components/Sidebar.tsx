@@ -134,7 +134,6 @@ function MetaVaultsIcon({ active }: { active?: boolean }) {
         stroke="white"
         strokeLinecap="round"
         strokeLinejoin="round"
-        strokeOpacity={active ? 1 : 0.3}
         strokeWidth="1.33333"
       />
     </svg>
