@@ -52,7 +52,7 @@ const BREAKDOWN = [
   { label: "YT Value", value: "$500.14", color: "#f4c071" },
   { label: "LP Value", value: "$16,997.22", color: "#d65ce9" },
   { label: "MV Value", value: "$16,724.53", color: "#ff9900" },
-  { label: "Claimable", value: "$58.10", color: "#6988ff" },
+  { label: "Claimable", value: "$78.44", color: "#6988ff" },
 ];
 
 export function PortfolioSummary() {
@@ -66,7 +66,7 @@ export function PortfolioSummary() {
           </span>
           <div className="flex items-baseline gap-3 flex-wrap">
             <span className="text-[28px] text-white" style={{ fontWeight: 600 }}>
-              <AnimatedValue target={48525.21} prefix="$" />
+              <AnimatedValue target={48545.55} prefix="$" />
             </span>
             <div className="flex items-center gap-2">
               <span className="text-[13px] text-[#00f99b]" style={{ fontWeight: 500 }}>+$187.56</span>

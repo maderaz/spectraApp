@@ -1,5 +1,6 @@
 import { useState, useMemo, useCallback } from "react";
 import { SpectraIcon, EthereumIcon } from "./TokenIcons";
+import { ALL_NETWORKS } from "./FilterDropdowns";
 
 // ─── Types ───
 type TabKey = "pt" | "yt" | "lp" | "mv" | "rewards";
@@ -47,6 +48,7 @@ interface Reward {
   amount: string;
   value: string;
   epoch: string;
+  network: string;
 }
 
 interface MVPosition {
@@ -145,10 +147,11 @@ const YT_POSITIONS = ALL_POSITIONS.filter((p) => p.type === "YT");
 const LP_POSITIONS = ALL_POSITIONS.filter((p) => p.type === "LP");
 
 const CLAIMABLE_REWARDS: Reward[] = [
-  { id: "r1", pool: "sGHO / Aave", protocol: "Aave", token: "SPECTRA", amount: "142.50", value: "$42.75", epoch: "Epoch 19" },
-  { id: "r2", pool: "sGHO / Aave", protocol: "Aave", token: "sGHO", amount: "4.21", value: "$4.21", epoch: "Current" },
-  { id: "r3", pool: "wstETH / Lido", protocol: "Lido", token: "SPECTRA", amount: "23.40", value: "$7.02", epoch: "Epoch 19" },
-  { id: "r4", pool: "wstETH / Lido", protocol: "Lido", token: "wstETH", amount: "0.0012", value: "$4.12", epoch: "Current" },
+  { id: "r1", pool: "sGHO / Aave", protocol: "Aave", token: "SPECTRA", amount: "142.50", value: "$42.75", epoch: "Epoch 19", network: "ethereum" },
+  { id: "r2", pool: "wstETH / Lido", protocol: "Lido", token: "SPECTRA", amount: "23.40", value: "$7.02", epoch: "Epoch 19", network: "ethereum" },
+  { id: "r3", pool: "sGHO / Aave", protocol: "Aave", token: "sGHO", amount: "4.21", value: "$4.21", epoch: "Current", network: "ethereum" },
+  { id: "r4", pool: "wstETH / Lido", protocol: "Lido", token: "wstETH", amount: "0.0012", value: "$4.12", epoch: "Current", network: "base" },
+  { id: "r5", pool: "avUSD / Avant", protocol: "Avant", token: "SPECTRA", amount: "67.80", value: "$20.34", epoch: "Epoch 19", network: "arbitrum" },
 ];
 
 const MV_POSITIONS: MVPosition[] = [
@@ -598,62 +601,75 @@ function MVPositionsTab({ positions }: { positions: MVPosition[] }) {
 }
 
 // ─── Claimable Rewards table ───
-function RewardsTab() {
-  const totalValue = CLAIMABLE_REWARDS.reduce((sum, r) => sum + parseFloat(r.value.replace("$", "")), 0);
-  const { sort, toggle } = useSort();
+function NetworkBadge({ networkId, size = 16 }: { networkId: string; size?: number }) {
+  const net = ALL_NETWORKS.find((n) => n.id === networkId);
+  if (!net) return null;
+  return (
+    <div className="rounded-full shrink-0 flex items-center justify-center"
+      style={{ width: size, height: size, backgroundColor: net.iconColor }}>
+      <span className="text-white" style={{ fontSize: size * 0.38, fontWeight: 700, lineHeight: 1 }}>
+        {net.iconChar.length > 1 ? net.iconChar.slice(0, 1) : net.iconChar}
+      </span>
+    </div>
+  );
+}
 
-  const sorted = useMemo(() => {
-    if (!sort.dir) return CLAIMABLE_REWARDS;
-    return [...CLAIMABLE_REWARDS].sort((a, b) => {
-      let va: unknown, vb: unknown;
-      switch (sort.key) {
-        case "pool": va = a.pool; vb = b.pool; break;
-        case "token": va = a.token; vb = b.token; break;
-        case "amount": va = parseNum(a.amount); vb = parseNum(b.amount); break;
-        case "value": va = parseNum(a.value); vb = parseNum(b.value); break;
-        default: return 0;
-      }
-      return compare(va, vb, sort.dir!);
+function RewardsTab() {
+  // Group rewards by network
+  const grouped = useMemo(() => {
+    const map = new Map<string, Reward[]>();
+    for (const r of CLAIMABLE_REWARDS) {
+      const list = map.get(r.network) || [];
+      list.push(r);
+      map.set(r.network, list);
+    }
+    return Array.from(map.entries()).map(([networkId, rewards]) => {
+      const net = ALL_NETWORKS.find((n) => n.id === networkId);
+      const total = rewards.reduce((sum, r) => sum + parseFloat(r.value.replace(/[$,]/g, "")), 0);
+      return { networkId, networkName: net?.name || networkId, rewards, total };
     });
-  }, [sort]);
+  }, []);
 
   return (
     <div>
-      {/* Claim All bar */}
-      <div className="flex items-center justify-between px-4 py-2 border-b border-white/[0.06] bg-[#00f99b]/[0.03]">
-        <span className="text-[11px] text-white/50" style={{ fontWeight: 400 }}>
-          Total claimable: <span className="text-[#00f99b]" style={{ fontWeight: 600 }}>${totalValue.toFixed(2)}</span>
-        </span>
-        <button className="bg-[#00f99b]/15 hover:bg-[#00f99b]/25 border border-[#00f99b]/30 rounded-md px-3 py-[4px] transition-all">
-          <span className="text-[11px] text-[#00f99b]" style={{ fontWeight: 600 }}>Claim All</span>
-        </button>
-      </div>
-
-      <div className="overflow-x-auto">
-        <div className={`${ROW} border-b border-white/[0.06]`}>
-          <div className="w-[22%] min-w-[140px]"><SortableHeader label="Pool" sortKey="pool" currentSort={sort} onToggle={toggle} /></div>
-          <div className="w-[18%] min-w-[90px]"><SortableHeader label="Token" sortKey="token" currentSort={sort} onToggle={toggle} /></div>
-          <div className="w-[22%] min-w-[100px]"><SortableHeader label="Amount" sortKey="amount" currentSort={sort} onToggle={toggle} /></div>
-          <div className="w-[18%] min-w-[70px]"><SortableHeader label="Value" sortKey="value" currentSort={sort} onToggle={toggle} /></div>
-          <div className="flex-1 min-w-[70px] text-right"><span className={H} style={{ fontWeight: 500 }}>Action</span></div>
-        </div>
-
-        {sorted.map((rew, i) => (
-          <div key={rew.id} className={`${ROW} ${i % 2 === 1 ? "bg-white/[0.02]" : ""}`}>
-            <div className="w-[22%] min-w-[140px]"><PoolCell pool={rew.pool} /></div>
-            <div className="w-[18%] min-w-[90px]">
-              <span className="text-[12px] sm:text-[13px] text-[#b8a4ff]" style={{ fontWeight: 500 }}>{rew.token}</span>
+      {grouped.map((group) => (
+        <div key={group.networkId}>
+          {/* Per-network Claim All header */}
+          <div className="flex items-center justify-between px-4 py-2 border-b border-white/[0.06] bg-[#00f99b]/[0.03]">
+            <div className="flex items-center gap-2">
+              <NetworkBadge networkId={group.networkId} size={18} />
+              <span className="text-[11px] text-white/70" style={{ fontWeight: 500 }}>{group.networkName}</span>
+              <span className="text-[11px] text-white/30" style={{ fontWeight: 400 }}>·</span>
+              <span className="text-[11px] text-white/50" style={{ fontWeight: 400 }}>
+                Total: <span className="text-[#00f99b]" style={{ fontWeight: 600 }}>${group.total.toFixed(2)}</span>
+              </span>
             </div>
-            <div className="w-[22%] min-w-[100px]"><span className={`${C} text-white/70`} style={{ fontWeight: 400 }}>{rew.amount}</span></div>
-            <div className="w-[18%] min-w-[70px]"><span className={C} style={{ fontWeight: 500 }}>{rew.value}</span></div>
-            <div className="flex-1 min-w-[70px] text-right">
-              <button className="bg-[#00f99b]/10 hover:bg-[#00f99b]/20 border border-[#00f99b]/20 rounded-md px-2.5 py-[3px] transition-all">
-                <span className="text-[10px] text-[#00f99b]" style={{ fontWeight: 500 }}>Claim</span>
-              </button>
-            </div>
+            <button className="bg-[#00f99b]/15 hover:bg-[#00f99b]/25 border border-[#00f99b]/30 rounded-md px-3 py-[4px] transition-all">
+              <span className="text-[11px] text-[#00f99b]" style={{ fontWeight: 600 }}>Claim All</span>
+            </button>
           </div>
-        ))}
-      </div>
+
+          {/* Reward rows for this network */}
+          {group.rewards.map((rew, i) => (
+            <div key={rew.id} className={`${ROW} ${i % 2 === 1 ? "bg-white/[0.02]" : ""} border-b border-white/[0.04]`}>
+              <div className="w-[30%] min-w-[120px]">
+                <span className="text-[12px] sm:text-[13px] text-[#b8a4ff]" style={{ fontWeight: 500 }}>{rew.token}</span>
+              </div>
+              <div className="w-[25%] min-w-[90px]">
+                <span className={`${C} text-white/70`} style={{ fontWeight: 400 }}>{rew.amount}</span>
+              </div>
+              <div className="w-[25%] min-w-[70px]">
+                <span className={C} style={{ fontWeight: 500 }}>{rew.value}</span>
+              </div>
+              <div className="flex-1 min-w-[70px] text-right">
+                <button className="bg-[#00f99b]/10 hover:bg-[#00f99b]/20 border border-[#00f99b]/20 rounded-md px-2.5 py-[3px] transition-all">
+                  <span className="text-[10px] text-[#00f99b]" style={{ fontWeight: 500 }}>Claim</span>
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      ))}
     </div>
   );
 }
