@@ -130,24 +130,13 @@ const TH = "text-[10px] sm:text-[11px] text-white/40 uppercase tracking-wider";
 
 // ─── Product tooltip ───
 function ProductCell({ activity, onClick }: { activity: Activity; onClick: () => void }) {
-  const [hover, setHover] = useState(false);
   return (
-    <div className="relative" onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
-      <button onClick={onClick} className="text-left group">
-        <span className="text-[13px] text-white group-hover:text-[#00f99b] transition-colors" style={{ fontWeight: 500 }}>{activity.product}</span>
-        {activity.maturity && (
-          <span className="block text-[10px] text-white/30" style={{ fontWeight: 400 }}>{activity.maturity}</span>
-        )}
-        {activity.productType === "metavault" && (
-          <span className="block text-[10px] text-white/30" style={{ fontWeight: 400 }}>MetaVault</span>
-        )}
-      </button>
-      {hover && activity.fullName && (
-        <div className="absolute left-0 top-full mt-1 z-50 px-2.5 py-1.5 bg-[#2a2a2e] border border-white/[0.12] rounded-md shadow-xl whitespace-nowrap">
-          <span className="text-[10px] text-white/70" style={{ fontWeight: 400 }}>{activity.fullName}</span>
-        </div>
+    <button onClick={onClick} className="text-left group">
+      <span className="text-[13px] text-white group-hover:text-[#00f99b] transition-colors" style={{ fontWeight: 500 }}>{activity.product}</span>
+      {activity.productType === "metavault" && (
+        <span className="block text-[10px] text-white/30" style={{ fontWeight: 400 }}>MetaVault</span>
       )}
-    </div>
+    </button>
   );
 }
 
