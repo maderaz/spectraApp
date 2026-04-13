@@ -283,11 +283,11 @@ export function TradingUI() {
 
           {/* Action buttons - right aligned */}
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-            <button onClick={() => navigate("/pools/1")} className="bg-[#d65ce9]/15 hover:bg-[#d65ce9]/25 border border-[#d65ce9]/30 rounded-md px-2 sm:px-3 py-[5px] transition-all flex items-center justify-center">
-              <span className="text-[11px] sm:text-[12px] text-[#d65ce9] leading-none whitespace-nowrap" style={{ fontWeight: 500 }}>Pool</span>
+            <button onClick={() => navigate("/pools/1")} className="bg-white/[0.04] hover:bg-white/[0.07] border border-white/[0.08] hover:border-white/[0.14] rounded-md px-2 sm:px-3 py-[5px] transition-all flex items-center justify-center">
+              <span className="text-[11px] sm:text-[12px] text-white/70 leading-none" style={{ fontWeight: 400 }}>Pool</span>
             </button>
-            <button className="bg-white/[0.04] hover:bg-white/[0.07] border border-white/[0.08] hover:border-white/[0.14] rounded-md px-2 sm:px-3 py-[5px] transition-all flex items-center justify-center">
-              <span className="text-[11px] sm:text-[12px] text-white/70 leading-none" style={{ fontWeight: 400 }}>Tokenize</span>
+            <button className="bg-[#00f99b]/15 border border-[#00f99b]/30 rounded-md px-2 sm:px-3 py-[5px] transition-all flex items-center justify-center">
+              <span className="text-[11px] sm:text-[12px] text-[#00f99b] leading-none whitespace-nowrap" style={{ fontWeight: 500 }}>Trade Yield</span>
             </button>
             <button className="bg-white/[0.04] hover:bg-white/[0.07] border border-white/[0.08] hover:border-white/[0.14] rounded-md px-2 sm:px-3 py-[5px] transition-all flex items-center justify-center">
               <span className="text-[11px] sm:text-[12px] text-white/70 leading-none" style={{ fontWeight: 400 }}>Details</span>
