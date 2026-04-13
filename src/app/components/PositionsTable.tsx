@@ -261,6 +261,25 @@ function PnlCell({ value, percent }: { value: string; percent: string }) {
   );
 }
 
+function FixedYieldTooltip({ value }: { value: number }) {
+  const [show, setShow] = useState(false);
+  const formatted = `${value >= 0 ? "+" : ""}$${Math.abs(value).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  return (
+    <div className="relative inline-block" onMouseEnter={() => setShow(true)} onMouseLeave={() => setShow(false)}>
+      <span className="text-[10px] text-white/30 cursor-default" style={{ fontWeight: 400 }}>
+        ≈{formatted}
+      </span>
+      {show && (
+        <div className="absolute left-0 top-full mt-1.5 z-50 w-[200px] px-3 py-2 bg-[#2a2a2e] border border-white/[0.12] rounded-lg shadow-xl">
+          <span className="text-[10px] text-white/70 leading-relaxed" style={{ fontWeight: 400 }}>
+            USD value based on current market prices. Subject to fluctuation until maturity.
+          </span>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function PoolCell({ pool }: { pool: string }) {
   return (
     <div className="flex items-center gap-2">
@@ -295,7 +314,13 @@ function PTPositionsTab({ positions }: { positions: Position[] }) {
         case "balance": va = parseNum(a.balanceUsd); vb = parseNum(b.balanceUsd); break;
         case "redemption": va = parseNum(a.maturityRedemption); vb = parseNum(b.maturityRedemption); break;
         case "value": va = parseNum(a.maturityValue); vb = parseNum(b.maturityValue); break;
-        case "fixedYield": va = parseNum(a.maturityValue) - parseNum(a.balanceUsd); vb = parseNum(b.maturityValue) - parseNum(b.balanceUsd); break;
+        case "fixedYield": {
+          const aRed = (a.maturityRedemption || "").match(/^([\d,.]+)/);
+          const bRed = (b.maturityRedemption || "").match(/^([\d,.]+)/);
+          va = (aRed ? parseNum(aRed[1]) : 0) - parseNum(a.balanceAmount);
+          vb = (bRed ? parseNum(bRed[1]) : 0) - parseNum(b.balanceAmount);
+          break;
+        }
         case "expiry": va = parseDate(a.maturity); vb = parseDate(b.maturity); break;
         default: return 0;
       }
@@ -323,8 +348,13 @@ function PTPositionsTab({ positions }: { positions: Position[] }) {
       {sorted.map((pos, i) => {
         const matVal = parseNum(pos.maturityValue);
         const balVal = parseNum(pos.balanceUsd);
-        const fixedYield = matVal - balVal;
-        const fixedYieldPct = balVal > 0 ? (fixedYield / balVal) * 100 : 0;
+        const fixedYieldUsd = matVal - balVal;
+        // Extract token name and amount from maturityRedemption (e.g., "14,432.64 sGHO")
+        const redemptionParts = (pos.maturityRedemption || "").match(/^([\d,.]+)\s+(.+)$/);
+        const redemptionAmount = redemptionParts ? parseNum(redemptionParts[1]) : 0;
+        const tokenName = redemptionParts ? redemptionParts[2] : "";
+        const balAmount = parseNum(pos.balanceAmount);
+        const fixedYieldTokens = redemptionAmount - balAmount;
         return (
         <div key={pos.id} className={`${ROW} ${i % 2 === 1 ? "bg-white/[0.02]" : ""} hover:bg-white/[0.06] transition-colors`}>
           <div className="w-[20%] min-w-[140px]"><PositionCell position={pos.position} accent={accent} /></div>
@@ -347,12 +377,10 @@ function PTPositionsTab({ positions }: { positions: Position[] }) {
           </div>
           <div className="w-[14%] min-w-[90px]">
             <div className="flex flex-col gap-[1px]">
-              <span className="text-[12px] sm:text-[13px]" style={{ fontWeight: 500, color: fixedYield >= 0 ? "#00f99b" : "#ef6b6b" }}>
-                {fixedYield >= 0 ? "+" : ""}${Math.abs(fixedYield).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              <span className="text-[12px] sm:text-[13px]" style={{ fontWeight: 500, color: fixedYieldTokens >= 0 ? "#00f99b" : "#ef6b6b" }}>
+                {fixedYieldTokens >= 0 ? "+" : ""}{Math.abs(fixedYieldTokens).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {tokenName}
               </span>
-              <span className="text-[10px] text-white/30" style={{ fontWeight: 400 }}>
-                {fixedYieldPct >= 0 ? "+" : ""}{fixedYieldPct.toFixed(2)}%
-              </span>
+              <FixedYieldTooltip value={fixedYieldUsd} />
             </div>
           </div>
           <div className="flex-1 min-w-[80px]"><span className="text-[11px] text-white/40" style={{ fontWeight: 400 }}>{pos.maturity}</span></div>
