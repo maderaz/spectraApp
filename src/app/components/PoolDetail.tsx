@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { useParams } from "react-router";
+import { useParams, useNavigate } from "react-router";
 import { SpectraIcon, EthereumIcon } from "./TokenIcons";
 import { ChartPanel } from "./ChartPanel";
 import { ActivityTable, INITIAL_HISTORY } from "./ActivityTable";
@@ -255,6 +255,7 @@ function LiquidityForm({ poolToken, iconColor, iconChar }: { poolToken: string; 
 // ─── Main Page ───
 export function PoolDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [history] = useState<HistoryEntry[]>(INITIAL_HISTORY);
 
   // Pool-specific data (would come from API in production)
@@ -338,13 +339,13 @@ export function PoolDetail() {
           </div>
           <div className="flex-1 min-w-[20px]" />
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-            <button className="bg-[#d65ce9]/15 hover:bg-[#d65ce9]/25 border border-[#d65ce9]/30 rounded-md px-2 sm:px-3 py-[5px] transition-all">
+            <button onClick={() => navigate("/pools")} className="bg-[#d65ce9]/15 hover:bg-[#d65ce9]/25 border border-[#d65ce9]/30 rounded-md px-2 sm:px-3 py-[5px] transition-all flex items-center justify-center">
               <span className="text-[11px] sm:text-[12px] text-[#d65ce9] leading-none whitespace-nowrap" style={{ fontWeight: 500 }}>Pool</span>
             </button>
-            <button className="bg-white/[0.04] hover:bg-white/[0.07] border border-white/[0.08] hover:border-white/[0.14] rounded-md px-2 sm:px-3 py-[5px] transition-all">
+            <button className="bg-white/[0.04] hover:bg-white/[0.07] border border-white/[0.08] hover:border-white/[0.14] rounded-md px-2 sm:px-3 py-[5px] transition-all flex items-center justify-center">
               <span className="text-[11px] sm:text-[12px] text-white/70 leading-none" style={{ fontWeight: 400 }}>Tokenize</span>
             </button>
-            <button className="bg-white/[0.04] hover:bg-white/[0.07] border border-white/[0.08] hover:border-white/[0.14] rounded-md px-2 sm:px-3 py-[5px] transition-all">
+            <button className="bg-white/[0.04] hover:bg-white/[0.07] border border-white/[0.08] hover:border-white/[0.14] rounded-md px-2 sm:px-3 py-[5px] transition-all flex items-center justify-center">
               <span className="text-[11px] sm:text-[12px] text-white/70 leading-none" style={{ fontWeight: 400 }}>Details</span>
             </button>
           </div>
