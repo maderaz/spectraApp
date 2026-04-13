@@ -58,7 +58,7 @@ export function PortfolioSummary() {
   return (
     <div className="shrink-0">
       {/* Total value */}
-      <div className="px-3 sm:px-5 pt-4 pb-2">
+      <div className="px-3 sm:px-5 pt-4 pb-3">
         <div className="flex flex-col gap-1">
           <span className="text-[10px] text-white/35 uppercase tracking-wider" style={{ fontWeight: 500 }}>
             Total Portfolio Value

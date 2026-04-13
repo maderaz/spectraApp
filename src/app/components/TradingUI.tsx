@@ -3,6 +3,7 @@ import { LiquidityPanel } from "./LiquidityPanel";
 import { ChartPanel } from "./ChartPanel";
 import { ActivityTable, INITIAL_ORDERS, INITIAL_HISTORY } from "./ActivityTable";
 import { useState, useCallback } from "react";
+import { useSearchParams } from "react-router";
 import type { Order, HistoryEntry } from "./ActivityTable";
 import svgPaths from "../../imports/svg-qtk3afs1b8";
 
@@ -148,7 +149,9 @@ function BottomStatusBar() {
 }
 
 export function TradingUI() {
-  const [assetType, setAssetType] = useState<AssetType>("PT");
+  const [searchParams] = useSearchParams();
+  const initialAsset = searchParams.get("asset") === "YT" ? "YT" : "PT";
+  const [assetType, setAssetType] = useState<AssetType>(initialAsset);
   const [orders, setOrders] = useState<Order[]>(INITIAL_ORDERS);
   const [history, setHistory] = useState<HistoryEntry[]>(INITIAL_HISTORY);
 
