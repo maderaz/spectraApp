@@ -145,10 +145,10 @@ const YT_POSITIONS = ALL_POSITIONS.filter((p) => p.type === "YT");
 const LP_POSITIONS = ALL_POSITIONS.filter((p) => p.type === "LP");
 
 const CLAIMABLE_REWARDS: Reward[] = [
-  { id: "r1", pool: "sGHO / Aave", protocol: "Aave", token: "SPECTRA", amount: "142.50", value: "$8.63", epoch: "Epoch 19" },
-  { id: "r2", pool: "sGHO / Aave", protocol: "Aave", token: "sGHO Yield", amount: "4.21", value: "$4.21", epoch: "Current" },
-  { id: "r3", pool: "wstETH / Lido", protocol: "Lido", token: "SPECTRA", amount: "23.40", value: "$1.42", epoch: "Epoch 19" },
-  { id: "r4", pool: "wstETH / Lido", protocol: "Lido", token: "wstETH Yield", amount: "0.0012", value: "$3.21", epoch: "Current" },
+  { id: "r1", pool: "sGHO / Aave", protocol: "Aave", token: "SPECTRA", amount: "142.50", value: "$42.75", epoch: "Epoch 19" },
+  { id: "r2", pool: "sGHO / Aave", protocol: "Aave", token: "sGHO", amount: "4.21", value: "$4.21", epoch: "Current" },
+  { id: "r3", pool: "wstETH / Lido", protocol: "Lido", token: "SPECTRA", amount: "23.40", value: "$7.02", epoch: "Epoch 19" },
+  { id: "r4", pool: "wstETH / Lido", protocol: "Lido", token: "wstETH", amount: "0.0012", value: "$4.12", epoch: "Current" },
 ];
 
 const MV_POSITIONS: MVPosition[] = [
