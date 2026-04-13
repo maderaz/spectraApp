@@ -12,6 +12,7 @@ import { BrandComponents } from "./components/BrandComponents";
 import { FixedRates } from "./components/FixedRates";
 import { YieldLeverage } from "./components/YieldLeverage";
 import { Pools } from "./components/Pools";
+import { PoolDetail } from "./components/PoolDetail";
 import { ActivityHistory } from "./components/ActivityHistory";
 
 function RedirectToHome() {
@@ -40,6 +41,7 @@ export const router = createBrowserRouter([
       { path: "fixed-rates", Component: FixedRates },
       { path: "yield-leverage", Component: YieldLeverage },
       { path: "pools", Component: Pools },
+      { path: "pools/:id", Component: PoolDetail },
       { path: "bridge", Component: RedirectToPTBridge },
       { path: "*", Component: RedirectToHome },
     ],
