@@ -236,13 +236,10 @@ export function ActivityHistory() {
                 {filteredRewards.map((r) => (
                   <div key={r.id} className="flex items-center px-4 py-[12px] border-b border-white/[0.04] hover:bg-white/[0.06] transition-colors min-w-[500px]">
                     <div className="w-[18%] min-w-[80px]">
-                      <div className="flex flex-col gap-[2px]">
-                        <span className="text-[13px] text-white/50" style={{ fontWeight: 400 }}>{r.time}</span>
-                        <a href={`https://etherscan.io/tx/${r.txHash}`} target="_blank" rel="noopener noreferrer"
-                          className="text-[10px] text-white/25 hover:text-white/50 transition-colors font-mono" style={{ borderBottom: "1px dotted rgba(255,255,255,0.15)" }}>
-                          {r.txHash}
-                        </a>
-                      </div>
+                      <a href={`https://etherscan.io/tx/${r.txHash}`} target="_blank" rel="noopener noreferrer"
+                        className="text-[13px] text-white/50 hover:text-white/70 transition-colors" style={{ fontWeight: 400, borderBottom: "1px dotted rgba(255,255,255,0.12)" }}>
+                        {r.time}
+                      </a>
                     </div>
                     <div className="w-[14%] min-w-[60px]">
                       <span className="text-[11px] px-2 py-[2px] rounded-full" style={{ fontWeight: 500, backgroundColor: "#6988ff15", color: "#6988ff" }}>Claim</span>
@@ -279,15 +276,12 @@ export function ActivityHistory() {
               <div className="flex-1 overflow-y-auto scrollbar-hide">
                 {filteredActivities.map((a) => (
                   <div key={a.id} className="flex items-center px-4 py-[12px] border-b border-white/[0.04] hover:bg-white/[0.06] transition-colors min-w-[700px]">
-                    {/* Time + Tx Hash */}
+                    {/* Time (clickable → tx) */}
                     <div className="w-[12%] min-w-[80px]">
-                      <div className="flex flex-col gap-[2px]">
-                        <span className="text-[13px] text-white/50" style={{ fontWeight: 400 }}>{a.time}</span>
-                        <a href={`https://etherscan.io/tx/${a.txHash}`} target="_blank" rel="noopener noreferrer"
-                          className="text-[10px] text-white/25 hover:text-white/50 transition-colors font-mono" style={{ borderBottom: "1px dotted rgba(255,255,255,0.15)" }}>
-                          {a.txHash}
-                        </a>
-                      </div>
+                      <a href={`https://etherscan.io/tx/${a.txHash}`} target="_blank" rel="noopener noreferrer"
+                        className="text-[13px] text-white/50 hover:text-white/70 transition-colors" style={{ fontWeight: 400, borderBottom: "1px dotted rgba(255,255,255,0.12)" }}>
+                        {a.time}
+                      </a>
                     </div>
                     {/* Type */}
                     <div className="w-[11%] min-w-[85px]">
