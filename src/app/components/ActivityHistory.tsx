@@ -158,6 +158,7 @@ export function ActivityHistory() {
   const [selectedNetworks, setSelectedNetworks] = useState<Set<string>>(() => new Set(ALL_NETWORKS.map((n) => n.id)));
 
   const isRewardsView = filter === "rewards";
+  const isMetaVaultsView = filter === "metavaults";
 
   // Filter main activities
   const filteredActivities = (() => {
@@ -213,7 +214,7 @@ export function ActivityHistory() {
             </div>
             <NetworkDropdown selected={selectedNetworks} onChange={setSelectedNetworks} />
             <span className="text-[11px] text-white/25" style={{ fontWeight: 400 }}>
-              {isRewardsView ? filteredRewards.length : filteredActivities.length} {isRewardsView ? "claim" : "transaction"}{(isRewardsView ? filteredRewards.length : filteredActivities.length) !== 1 ? "s" : ""}
+              {isRewardsView ? filteredRewards.length : filteredActivities.length} {isRewardsView ? "claim" : isMetaVaultsView ? "action" : "transaction"}{(isRewardsView ? filteredRewards.length : filteredActivities.length) !== 1 ? "s" : ""}
             </span>
           </div>
           <div className="border-b border-white/[0.06]" />
@@ -250,6 +251,57 @@ export function ActivityHistory() {
                 ))}
                 {filteredRewards.length === 0 && (
                   <div className="flex items-center justify-center py-16 text-[13px] text-white/20" style={{ fontWeight: 400 }}>No reward claims found</div>
+                )}
+              </div>
+            </>
+          ) : isMetaVaultsView ? (
+            /* ═══ METAVAULTS VIEW ═══ */
+            <>
+              <div className="flex items-center px-4 py-[10px] border-b border-white/[0.06] shrink-0 min-w-[500px]">
+                <div className="w-[16%] min-w-[80px]"><span className={TH} style={{ fontWeight: 500 }}>Time</span></div>
+                <div className="w-[24%] min-w-[140px]"><span className={TH} style={{ fontWeight: 500 }}>Action</span></div>
+                <div className="w-[5%] min-w-[24px]" />
+                <div className="w-[25%] min-w-[120px]"><span className={TH} style={{ fontWeight: 500 }}>Product</span></div>
+                <div className="flex-1 min-w-[80px]"><span className={TH} style={{ fontWeight: 500 }}>Value</span></div>
+              </div>
+              <div className="flex-1 overflow-y-auto scrollbar-hide">
+                {filteredActivities.map((a) => {
+                  const fullNames: Record<string, string> = {
+                    "Deposit Req.": "Deposit Request",
+                    "Claim Dep.": "Claim Deposit",
+                    "Cancel Dep.": "Cancel Deposit Request",
+                    "Withdrawal Req.": "Withdrawal Request",
+                    "Claim Withd.": "Claim Withdrawal",
+                    "Cancel Withd.": "Cancel Withdrawal Request",
+                  };
+                  return (
+                    <div key={a.id} className="flex items-center px-4 py-[12px] border-b border-white/[0.04] hover:bg-white/[0.06] transition-colors min-w-[500px]">
+                      <div className="w-[16%] min-w-[80px]">
+                        <a href={`https://etherscan.io/tx/${a.txHash}`} target="_blank" rel="noopener noreferrer"
+                          className="text-[13px] text-white/50 hover:text-white/70 transition-colors" style={{ fontWeight: 400, borderBottom: "1px dotted rgba(255,255,255,0.12)" }}>
+                          {a.time}
+                        </a>
+                      </div>
+                      <div className="w-[24%] min-w-[140px]">
+                        <span className="text-[10px] sm:text-[11px] px-2 py-[2px] rounded-full whitespace-nowrap"
+                          style={{ fontWeight: 500, backgroundColor: `${TYPE_COLORS[a.type] || "#666"}15`, color: TYPE_COLORS[a.type] || "#666" }}>
+                          {fullNames[a.type] || a.type}
+                        </span>
+                      </div>
+                      <div className="w-[5%] min-w-[24px] flex justify-center">
+                        <NetworkIcon networkId={a.network} size={16} />
+                      </div>
+                      <div className="w-[25%] min-w-[120px]">
+                        <span className="text-[13px] text-white" style={{ fontWeight: 500 }}>{a.product}</span>
+                      </div>
+                      <div className="flex-1 min-w-[80px]">
+                        <span className="text-[13px] text-white" style={{ fontWeight: 500 }}>{a.value}</span>
+                      </div>
+                    </div>
+                  );
+                })}
+                {filteredActivities.length === 0 && (
+                  <div className="flex items-center justify-center py-16 text-[13px] text-white/20" style={{ fontWeight: 400 }}>No MetaVault activity found</div>
                 )}
               </div>
             </>
