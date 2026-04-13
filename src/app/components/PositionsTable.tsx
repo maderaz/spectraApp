@@ -98,7 +98,7 @@ const ALL_POSITIONS: Position[] = [
     id: "p1", pool: "sGHO / Aave", position: "PT-sGHO", protocol: "Aave", type: "PT",
     balance: "14,284.20 PT", balanceAmount: "14,284.20", balanceUsd: "14,245.22", value: "$14,245.22", entryApy: "5.42%", currentApy: "5.61%",
     pnl: "+$187.42", pnlPercent: "+1.33%", maturity: "Jan 31, 2026",
-    maturityRedemption: "14,432.64 sGHO", maturityValue: "$14,284.20",
+    maturityRedemption: "14,432.64 sGHO", maturityValue: "$14,432.64",
   },
   {
     id: "p5", pool: "wstETH / Lido", position: "PT-wstETH", protocol: "Lido", type: "PT",
@@ -263,7 +263,7 @@ function PnlCell({ value, percent }: { value: string; percent: string }) {
 
 function FixedYieldTooltip({ value }: { value: number }) {
   const [show, setShow] = useState(false);
-  const formatted = `${value >= 0 ? "+" : ""}$${Math.abs(value).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  const formatted = `$${Math.abs(value).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   return (
     <div className="relative inline-block" onMouseEnter={() => setShow(true)} onMouseLeave={() => setShow(false)}>
       <span className="text-[10px] text-white/30 cursor-default" style={{ fontWeight: 400 }}>
