@@ -189,7 +189,7 @@ const TABS: TabDef[] = [
 
 // ─── Shared ───
 const H = "text-[10px] sm:text-[11px] text-white/40 uppercase tracking-wider";
-const C = "text-[11px] sm:text-[12px] text-white";
+const C = "text-[12px] sm:text-[13px] text-white";
 const ROW = "flex items-center px-4 py-[10px]";
 
 // ─── Sort chevron ───
@@ -253,7 +253,7 @@ function PnlCell({ value, percent }: { value: string; percent: string }) {
   const positive = value.startsWith("+");
   return (
     <div className="flex flex-col gap-[1px]">
-      <span className="text-[11px] sm:text-[12px]" style={{ fontWeight: 500, color: positive ? "#00f99b" : "#ef6b6b" }}>
+      <span className="text-[12px] sm:text-[13px]" style={{ fontWeight: 500, color: positive ? "#00f99b" : "#ef6b6b" }}>
         {value}
       </span>
       <span className="text-[9px] text-white/30" style={{ fontWeight: 400 }}>{percent}</span>
@@ -264,8 +264,8 @@ function PnlCell({ value, percent }: { value: string; percent: string }) {
 function PoolCell({ pool }: { pool: string }) {
   return (
     <div className="flex items-center gap-2">
-      <EthereumIcon size={14} />
-      <SpectraIcon size={22} />
+      <EthereumIcon size={16} />
+      <SpectraIcon size={24} />
       <span className={C} style={{ fontWeight: 500 }}>{pool}</span>
     </div>
   );
@@ -274,9 +274,9 @@ function PoolCell({ pool }: { pool: string }) {
 function PositionCell({ position, accent }: { position: string; accent: string }) {
   return (
     <div className="flex items-center gap-2">
-      <EthereumIcon size={14} />
-      <SpectraIcon size={22} />
-      <span className="text-[11px] sm:text-[12px]" style={{ fontWeight: 500, color: accent }}>{position}</span>
+      <EthereumIcon size={16} />
+      <SpectraIcon size={24} />
+      <span className="text-[12px] sm:text-[13px]" style={{ fontWeight: 500, color: accent }}>{position}</span>
     </div>
   );
 }
@@ -334,7 +334,7 @@ function PTPositionsTab({ positions }: { positions: Position[] }) {
             </div>
           </div>
           <div className="flex-1 min-w-[100px]">
-            <span className="text-[11px] sm:text-[12px]" style={{ fontWeight: 500, color: accent }}>
+            <span className="text-[12px] sm:text-[13px]" style={{ fontWeight: 500, color: accent }}>
               {pos.maturityValue}
             </span>
           </div>
@@ -401,7 +401,7 @@ function YTPositionsTab({ positions }: { positions: Position[] }) {
           </div>
           <div className="flex-1 min-w-[100px]">
             <div className="flex flex-col gap-[1px]">
-              <span className="text-[11px] sm:text-[12px]" style={{ fontWeight: 500, color: accent }}>{pos.claimableYield || "—"}</span>
+              <span className="text-[12px] sm:text-[13px]" style={{ fontWeight: 500, color: accent }}>{pos.claimableYield || "—"}</span>
               {pos.claimableYieldUsd && (
                 <span className="text-[10px] text-white/30" style={{ fontWeight: 400 }}>≈{pos.claimableYieldUsd}</span>
               )}
@@ -462,7 +462,7 @@ function LPPositionsTab({ positions }: { positions: Position[] }) {
           </div>
           <div className="flex-1 min-w-[90px]">
             <div className="flex flex-col gap-[1px]">
-              <span className="text-[11px] sm:text-[12px]" style={{ fontWeight: 500, color: accent }}>{pos.apy || pos.currentApy}</span>
+              <span className="text-[12px] sm:text-[13px]" style={{ fontWeight: 500, color: accent }}>{pos.apy || pos.currentApy}</span>
               {pos.apyBoost && (
                 <span className="text-[10px] text-white/30" style={{ fontWeight: 400 }}>{pos.apyBoost}</span>
               )}
@@ -524,11 +524,11 @@ function MVPositionsTab({ positions }: { positions: MVPosition[] }) {
               <EthereumIcon size={14} />
               <SpectraIcon size={22} />
               <TypeBadge type="MV" />
-              <span className="text-[11px] sm:text-[12px]" style={{ fontWeight: 500, color: accent }}>{pos.vault}</span>
+              <span className="text-[12px] sm:text-[13px]" style={{ fontWeight: 500, color: accent }}>{pos.vault}</span>
             </div>
           </div>
           <div className="flex-1 min-w-[90px]">
-            <span className="text-[11px] sm:text-[12px] text-white/50" style={{ fontWeight: 400 }}>{pos.curator}</span>
+            <span className="text-[12px] sm:text-[13px] text-white/50" style={{ fontWeight: 400 }}>{pos.curator}</span>
           </div>
           <div className="flex-1 min-w-[120px]">
             <div className="flex flex-col gap-[1px]">
@@ -540,7 +540,7 @@ function MVPositionsTab({ positions }: { positions: MVPosition[] }) {
             <span className={C} style={{ fontWeight: 500 }}>{pos.estimatedValue}</span>
           </div>
           <div className="flex-1 min-w-[80px]">
-            <span className="text-[11px] sm:text-[12px]" style={{ fontWeight: 500, color: accent }}>{pos.maxApy}</span>
+            <span className="text-[12px] sm:text-[13px]" style={{ fontWeight: 500, color: accent }}>{pos.maxApy}</span>
           </div>
           <div className="flex-1 min-w-[70px]">
             <span className="text-[11px] text-white/40" style={{ fontWeight: 400 }}>{pos.base}</span>
@@ -598,7 +598,7 @@ function RewardsTab() {
           <div key={rew.id} className={`${ROW} ${i % 2 === 1 ? "bg-white/[0.02]" : ""}`}>
             <div className="flex-1 min-w-[140px]"><PoolCell pool={rew.pool} /></div>
             <div className="flex-1 min-w-[90px]">
-              <span className="text-[11px] sm:text-[12px] text-[#b8a4ff]" style={{ fontWeight: 500 }}>{rew.token}</span>
+              <span className="text-[12px] sm:text-[13px] text-[#b8a4ff]" style={{ fontWeight: 500 }}>{rew.token}</span>
             </div>
             <div className="flex-1 min-w-[100px]"><span className={`${C} text-white/70`} style={{ fontWeight: 400 }}>{rew.amount}</span></div>
             <div className="flex-1 min-w-[70px]"><span className={C} style={{ fontWeight: 500 }}>{rew.value}</span></div>
