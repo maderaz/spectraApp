@@ -1,103 +1,241 @@
-import { useState } from "react";
-import { useParams, useNavigate } from "react-router";
+import { useState, useCallback } from "react";
+import { useParams } from "react-router";
+import { SpectraIcon, EthereumIcon } from "./TokenIcons";
+import { ChartPanel } from "./ChartPanel";
+import { ActivityTable, INITIAL_HISTORY } from "./ActivityTable";
+import type { HistoryEntry } from "./ActivityTable";
 import { SmallTokenCircle } from "./shared/TableIcons";
 
-// ─── Pool mock data ───
-const POOL_DATA: Record<string, {
-  token: string; protocol: string; network: string; maturity: string;
-  liquidity: string; defaultToken: string; underlying: string;
-  apy: string; swapFee: string; poolComposition: { ibt: number; pt: number };
-  apyBreakdown: { ptFixed: string; lpFees: string; lpRewards: string; rewardTokens: { name: string; apy: string; color: string }[] };
-  iconColor: string; iconChar: string; chainColor: string; chainChar: string;
-}> = {
-  "1": {
-    token: "avUSD", protocol: "Avant", network: "arbitrum", maturity: "May 15 2026",
-    liquidity: "$3,180,186", defaultToken: "avUSDx", underlying: "avUSD",
-    apy: "10.34%", swapFee: "0.04%", poolComposition: { ibt: 84, pt: 16 },
-    apyBreakdown: { ptFixed: "4.12%", lpFees: "0.18%", lpRewards: "2.82%", rewardTokens: [{ name: "APT", apy: "2.82%", color: "#ef4444" }] },
-    iconColor: "#ef4444", iconChar: "A", chainColor: "#8b5cf6", chainChar: "◆",
-  },
-  "2": {
-    token: "stXRP", protocol: "Firelight", network: "sonic", maturity: "Jun 04 2026",
-    liquidity: "$9,399,611", defaultToken: "stXRP", underlying: "FXRP",
-    apy: "1.86%", swapFee: "0.04%", poolComposition: { ibt: 84, pt: 16 },
-    apyBreakdown: { ptFixed: "0.45%", lpFees: "0.18%", lpRewards: "1.22%", rewardTokens: [{ name: "rFLR", apy: "1.22%", color: "#dc2626" }] },
-    iconColor: "#f97316", iconChar: "✦", chainColor: "#22c55e", chainChar: "◆",
-  },
-};
+// ─── Reuse TradingUI helpers ───
 
-// ─── Activity mock ───
-const POOL_ACTIVITY = [
-  { action: "Buy PT", value: "$2,042", time: "46m", user: "0xef6...252" },
-  { action: "Buy YT", value: "$2,292", time: "5h 12m", user: "0xf5f...b2a" },
-  { action: "Buy YT", value: "$3,080", time: "5h 14m", user: "0xf5f...b2a" },
-  { action: "Buy YT", value: "$257", time: "5h 56m", user: "0xaeb...f18" },
-  { action: "Buy PT", value: "$1,361", time: "6h 10m", user: "0xaeb...f18" },
-  { action: "Add Liq", value: "$0.03", time: "7h 2m", user: "0x5ff...ed1" },
-  { action: "Buy YT", value: "$26,600", time: "8h 1m", user: "0xcf5...7c8" },
-  { action: "Buy YT", value: "$5,093", time: "12h 21m", user: "0xf5f...b2a" },
-  { action: "Buy YT", value: "$1,393", time: "14h 14m", user: "0xb96...51a" },
-  { action: "Add Liq", value: "$181", time: "14h 38m", user: "0x9ea...4dd" },
-];
-
-// ─── Components ───
-
-function ToggleButton({ active, label, onClick }: { active: boolean; label: string; onClick: () => void }) {
+function InfoIcon() {
   return (
-    <button
-      onClick={onClick}
-      className={`flex-1 py-[10px] text-[13px] rounded-[8px] transition-all ${
-        active ? "bg-[#00f99b] text-black" : "text-white/50 hover:text-white/70 hover:bg-white/[0.04]"
-      }`}
-      style={{ fontWeight: active ? 600 : 400 }}
-    >{label}</button>
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="text-white/25">
+      <circle cx="6" cy="6" r="5" stroke="currentColor" strokeWidth="1" />
+      <path d="M5.2 4.8C5.2 4.2 5.6 3.8 6 3.8S6.8 4.1 6.8 4.5C6.8 5 6.4 5.1 6 5.5V6.2" stroke="currentColor" strokeWidth="0.9" strokeLinecap="round" />
+      <circle cx="6" cy="7.3" r="0.4" fill="currentColor" />
+    </svg>
   );
 }
 
-function PercentButton({ label, onClick }: { label: string; onClick: () => void }) {
+function InfoTooltip({ text }: { text: string }) {
+  const [isVisible, setIsVisible] = useState(false);
   return (
-    <button onClick={onClick} className="flex-1 border border-white/[0.08] rounded-[8px] py-[8px] text-[12px] text-white/50 hover:text-white/70 hover:bg-white/[0.04] hover:border-white/[0.12] transition-all" style={{ fontWeight: 400 }}>
-      {label}
-    </button>
-  );
-}
-
-function InfoRow({ label, value, accent, tooltip }: { label: string; value: string; accent?: boolean; tooltip?: string }) {
-  return (
-    <div className="flex items-center justify-between py-[8px]">
-      <div className="flex items-center gap-1.5">
-        <span className="text-[12px] text-white/50" style={{ fontWeight: 400 }}>{label}</span>
-        {tooltip && (
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="text-white/25">
-            <circle cx="6" cy="6" r="5" stroke="currentColor" strokeWidth="1" />
-            <path d="M5.2 4.8C5.2 4.2 5.6 3.8 6 3.8S6.8 4.1 6.8 4.5C6.8 5 6.4 5.1 6 5.5V6.2" stroke="currentColor" strokeWidth="0.9" strokeLinecap="round" />
-            <circle cx="6" cy="7.3" r="0.4" fill="currentColor" />
-          </svg>
-        )}
-      </div>
-      <span className={`text-[12px] ${accent ? "text-[#00f99b]" : "text-white"}`} style={{ fontWeight: 500 }}>{value}</span>
+    <div className="relative inline-block">
+      <button onMouseEnter={() => setIsVisible(true)} onMouseLeave={() => setIsVisible(false)} onClick={() => setIsVisible((v) => !v)} className="inline-flex"><InfoIcon /></button>
+      {isVisible && (
+        <div className="absolute left-0 sm:left-1/2 sm:-translate-x-1/2 top-full mt-2 z-50 w-[200px] sm:w-[220px] px-3 py-2 bg-[#2a2a2e] border border-white/[0.12] rounded-lg shadow-xl">
+          <div className="absolute -top-1 left-3 sm:left-1/2 sm:-translate-x-1/2 w-2 h-2 bg-[#2a2a2e] border-t border-l border-white/[0.12] rotate-45" />
+          <span className="font-['Inter'] text-[11px] text-white/80 leading-relaxed" style={{ fontWeight: 400 }}>{text}</span>
+        </div>
+      )}
     </div>
   );
 }
 
-function CompositionBar({ ibt, pt }: { ibt: number; pt: number }) {
+function ChangePill({ value, color }: { value: string; color: "green" | "neutral" }) {
+  const bg = color === "green" ? "bg-[#00f99b]/10 text-[#00f99b]" : "bg-white/[0.06] text-white/40";
+  return <span className={`inline-flex items-center px-[5px] py-[1px] rounded-full text-[10px] ${bg}`} style={{ fontWeight: 500 }}>{value}</span>;
+}
+
+function CopyIcon() {
   return (
-    <div className="flex flex-col gap-2">
-      <div className="flex items-center justify-between">
-        <span className="text-[11px] text-white/40" style={{ fontWeight: 400 }}>Pool Composition</span>
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1"><span className="w-[6px] h-[6px] rounded-full bg-[#6988ff]" /><span className="text-[10px] text-white/40">IBT</span></div>
-          <div className="flex items-center gap-1"><span className="w-[6px] h-[6px] rounded-full bg-[#00f99b]" /><span className="text-[10px] text-white/40">PT</span></div>
-        </div>
+    <svg width="10" height="10" viewBox="0 0 16 16" fill="none">
+      <rect x="5" y="5" width="9" height="9" rx="1.5" stroke="white" strokeOpacity="0.35" strokeWidth="1.3" />
+      <path d="M11 5V3.5A1.5 1.5 0 009.5 2h-6A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="white" strokeOpacity="0.35" strokeWidth="1.3" />
+    </svg>
+  );
+}
+
+function BottomStatusBar() {
+  const [copied, setCopied] = useState(false);
+  const poolAddress = "0x8B4e...2f1A";
+  const handleCopy = () => { navigator.clipboard.writeText(poolAddress).catch(() => {}); setCopied(true); setTimeout(() => setCopied(false), 1500); };
+  return (
+    <div className="flex items-center px-3 sm:px-5 py-[5px] border-t border-white/[0.06] overflow-x-auto scrollbar-hide shrink-0 bg-white/[0.01]">
+      <div className="flex items-center gap-2 pr-4 border-r border-white/[0.06] shrink-0">
+        <span className="text-[10px] text-white/25" style={{ fontWeight: 400 }}>Pool</span>
+        <button onClick={handleCopy} className="flex items-center gap-1.5 hover:bg-white/[0.08] rounded px-1 py-0.5 transition-colors group">
+          <span className="text-[10px] text-white/50 font-mono group-hover:text-white/70 transition-colors" style={{ fontWeight: 500 }}>{poolAddress}</span>
+          {copied ? <svg width="10" height="10" viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3 3 7-7" stroke="#00f99b" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg> : <CopyIcon />}
+        </button>
       </div>
-      <div className="flex h-[6px] rounded-full overflow-hidden bg-white/[0.04]">
-        <div className="bg-[#6988ff] rounded-l-full" style={{ width: `${ibt}%` }} />
-        <div className="bg-[#00f99b] rounded-r-full" style={{ width: `${pt}%` }} />
+      <div className="flex items-center gap-2 px-4 border-r border-white/[0.06] shrink-0">
+        <span className="text-[10px] text-white/25" style={{ fontWeight: 400 }}>Protocol</span>
+        <span className="text-[10px] text-white/50" style={{ fontWeight: 500 }}>Spectra v2</span>
       </div>
-      <div className="flex items-center justify-between">
-        <span className="text-[10px] text-white/30" style={{ fontWeight: 400 }}>{ibt}%</span>
-        <span className="text-[10px] text-white/30" style={{ fontWeight: 400 }}>{pt}%</span>
+      <div className="flex items-center gap-2 px-4 border-r border-white/[0.06] shrink-0">
+        <span className="text-[10px] text-white/25" style={{ fontWeight: 400 }}>Pool Fee</span>
+        <span className="text-[10px] text-white/60" style={{ fontWeight: 600 }}>0.04%</span>
       </div>
+      <div className="flex items-center gap-2 px-4 shrink-0">
+        <span className="text-[10px] text-white/25" style={{ fontWeight: 400 }}>LP Holders</span>
+        <span className="text-[10px] text-[#d65ce9]/70" style={{ fontWeight: 600 }}>892</span>
+      </div>
+      <div className="flex-1" />
+      <div className="flex items-center gap-1.5 shrink-0">
+        <div className="w-[5px] h-[5px] rounded-full bg-[#00f99b] animate-pulse" />
+        <span className="text-[10px] text-white/30" style={{ fontWeight: 400 }}>Block 21,847,293</span>
+      </div>
+    </div>
+  );
+}
+
+// ─── Left Panel: Add/Remove Liquidity ───
+
+function LiquidityForm({ poolToken, iconColor, iconChar }: { poolToken: string; iconColor: string; iconChar: string }) {
+  const [mode, setMode] = useState<"add" | "remove">("add");
+  const [inputAmount, setInputAmount] = useState("");
+
+  return (
+    <div className="flex flex-col gap-4">
+      {/* Add / Remove toggle */}
+      <div className="flex bg-white/[0.04] rounded-[10px] p-[3px] border border-white/[0.06]">
+        <button onClick={() => setMode("add")}
+          className={`flex-1 py-[10px] text-[13px] rounded-[8px] transition-all ${mode === "add" ? "bg-[#d65ce9] text-white" : "text-white/50 hover:text-white/70 hover:bg-white/[0.04]"}`}
+          style={{ fontWeight: mode === "add" ? 600 : 400 }}>Add</button>
+        <button onClick={() => setMode("remove")}
+          className={`flex-1 py-[10px] text-[13px] rounded-[8px] transition-all ${mode === "remove" ? "bg-[#d65ce9] text-white" : "text-white/50 hover:text-white/70 hover:bg-white/[0.04]"}`}
+          style={{ fontWeight: mode === "remove" ? 600 : 400 }}>Remove</button>
+      </div>
+
+      {mode === "add" ? (
+        <>
+          {/* Input */}
+          <div className="flex flex-col gap-1.5">
+            <span className="text-[12px] text-white/50" style={{ fontWeight: 400 }}>Input</span>
+            <div className="flex items-center bg-white/[0.03] border border-white/[0.08] rounded-[10px] px-4 py-3">
+              <div className="flex-1">
+                <input type="text" placeholder="0" value={inputAmount} onChange={(e) => setInputAmount(e.target.value)}
+                  className="bg-transparent text-[20px] text-white outline-none w-full" style={{ fontWeight: 500 }} />
+                <span className="text-[11px] text-white/25" style={{ fontWeight: 400 }}>≈$0</span>
+              </div>
+              <button className="flex items-center gap-2 bg-white/[0.06] border border-white/[0.08] rounded-[8px] px-3 py-[6px] hover:bg-white/[0.08] transition-colors">
+                <SmallTokenCircle color={iconColor} char={iconChar} size={20} />
+                <span className="text-[12px] text-white" style={{ fontWeight: 500 }}>Select</span>
+                <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="white" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              </button>
+            </div>
+          </div>
+
+          {/* Balance */}
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] text-white/30" style={{ fontWeight: 400 }}>Balance: 0</span>
+            <div className="flex items-center gap-2">
+              {["25%", "50%", "Max"].map((p) => (
+                <button key={p} className="text-[10px] text-white/30 hover:text-white/60 transition-colors" style={{ fontWeight: 400 }}>{p}</button>
+              ))}
+            </div>
+          </div>
+
+          <div className="border-t border-white/[0.06]" />
+
+          {/* Balanced mode toggle */}
+          <div className="flex items-center gap-2">
+            <div className="w-[32px] h-[16px] rounded-full bg-[#00f99b]/40 relative cursor-pointer">
+              <div className="absolute right-[2px] top-[2px] w-[12px] h-[12px] rounded-full bg-[#00f99b]" />
+            </div>
+            <span className="text-[11px] text-white/50" style={{ fontWeight: 400 }}>Balanced Mode (Recommended)</span>
+            <InfoTooltip text="Balanced mode automatically splits your deposit into the optimal IBT/PT ratio for the pool." />
+          </div>
+
+          {/* Output */}
+          <div className="flex flex-col gap-1">
+            <span className="text-[12px] text-white/50" style={{ fontWeight: 400 }}>Output</span>
+            <div className="flex items-center justify-between py-2.5 border-b border-white/[0.04]">
+              <div className="flex items-center gap-2">
+                <SmallTokenCircle color="#d65ce9" char="LP" size={20} />
+                <span className="text-[12px] text-white/60" style={{ fontWeight: 400 }}>LP-{poolToken}</span>
+              </div>
+              <span className="text-[12px] text-white/30">—</span>
+            </div>
+            <div className="flex items-center justify-between py-2.5 border-b border-white/[0.04]">
+              <div className="flex items-center gap-2">
+                <SmallTokenCircle color="#f4c071" char="YT" size={20} />
+                <span className="text-[12px] text-white/60" style={{ fontWeight: 400 }}>YT-{poolToken}</span>
+              </div>
+              <span className="text-[12px] text-white/30">—</span>
+            </div>
+          </div>
+
+          {/* Info rows */}
+          <div className="flex items-center justify-between"><span className="text-[11px] text-white/40">Pool Share</span><span className="text-[11px] text-white/30">—</span></div>
+          <div className="flex items-center justify-between"><span className="text-[11px] text-white/40">Implied APY Change <InfoTooltip text="Change in implied APY after your deposit." /></span><span className="text-[11px] text-white/30">—</span></div>
+          <div className="flex items-center justify-between"><span className="text-[11px] text-white/40">New Pool APY <InfoTooltip text="Projected pool APY after your deposit." /></span><span className="text-[11px] text-white/30">—</span></div>
+
+          {/* Details collapsible */}
+          <details className="group border-t border-white/[0.06] pt-2">
+            <summary className="flex items-center justify-between cursor-pointer">
+              <span className="text-[12px] text-white/50" style={{ fontWeight: 400 }}>Details</span>
+              <svg width="10" height="6" viewBox="0 0 10 6" fill="none" className="transition-transform group-open:rotate-180"><path d="M1 1L5 5L9 1" stroke="white" strokeOpacity="0.3" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" /></svg>
+            </summary>
+            <div className="pt-2 text-[11px] text-white/25">Transaction details will appear after entering an amount.</div>
+          </details>
+
+          <button className="w-full bg-[#d65ce9] hover:bg-[#c24dd6] text-white rounded-[10px] py-[12px] text-[14px] transition-colors" style={{ fontWeight: 600 }}>
+            Connect Wallet
+          </button>
+        </>
+      ) : (
+        <>
+          {/* Remove: amount input */}
+          <span className="text-[12px] text-white/50" style={{ fontWeight: 400 }}>Choose how much to withdraw</span>
+          <div className="flex items-center bg-white/[0.03] border border-white/[0.08] rounded-[10px] px-4 py-3">
+            <div className="flex-1">
+              <input type="text" placeholder="0" value={inputAmount} onChange={(e) => setInputAmount(e.target.value)}
+                className="bg-transparent text-[20px] text-white outline-none w-full" style={{ fontWeight: 500 }} />
+              <span className="text-[11px] text-white/25" style={{ fontWeight: 400 }}>≈$0</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <SmallTokenCircle color="#d65ce9" char="LP" size={20} />
+              <span className="text-[12px] text-white/50" style={{ fontWeight: 400 }}>LP-{poolToken}</span>
+            </div>
+          </div>
+
+          {/* Percent buttons */}
+          <div className="flex gap-2">
+            {["25%", "50%", "75%", "100%"].map((p) => (
+              <button key={p} className="flex-1 border border-white/[0.08] rounded-[8px] py-[8px] text-[12px] text-white/50 hover:text-white/70 hover:bg-white/[0.04] hover:border-white/[0.12] transition-all" style={{ fontWeight: 400 }}>{p}</button>
+            ))}
+          </div>
+
+          <div className="border-t border-white/[0.06]" />
+
+          {/* No Price Impact Mode */}
+          <div className="flex items-center gap-2">
+            <div className="w-[32px] h-[16px] rounded-full bg-[#00f99b]/40 relative cursor-pointer">
+              <div className="absolute right-[2px] top-[2px] w-[12px] h-[12px] rounded-full bg-[#00f99b]" />
+            </div>
+            <span className="text-[11px] text-white/50" style={{ fontWeight: 400 }}>No Price Impact Mode</span>
+            <InfoTooltip text="Withdraw in the exact pool ratio to avoid any price impact." />
+          </div>
+
+          {/* Output */}
+          <div className="flex flex-col gap-1">
+            <span className="text-[12px] text-white/50" style={{ fontWeight: 400 }}>Output</span>
+            <div className="flex items-center justify-between py-2.5 border-b border-white/[0.04]">
+              <div className="flex items-center gap-2">
+                <SmallTokenCircle color={iconColor} char={iconChar} size={20} />
+                <span className="text-[12px] text-white/60" style={{ fontWeight: 400 }}>{poolToken}</span>
+              </div>
+              <span className="text-[12px] text-white/30">—</span>
+            </div>
+            <div className="flex items-center justify-between py-2.5 border-b border-white/[0.04]">
+              <div className="flex items-center gap-2">
+                <SmallTokenCircle color="#00f99b" char="PT" size={20} />
+                <span className="text-[12px] text-white/60" style={{ fontWeight: 400 }}>PT-{poolToken}</span>
+              </div>
+              <span className="text-[12px] text-white/30">—</span>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between"><span className="text-[11px] text-white/40">Pool Share</span><span className="text-[11px] text-white/30">—</span></div>
+
+          <button className="w-full bg-[#d65ce9] hover:bg-[#c24dd6] text-white rounded-[10px] py-[12px] text-[14px] transition-colors" style={{ fontWeight: 600 }}>
+            Connect Wallet
+          </button>
+        </>
+      )}
     </div>
   );
 }
@@ -105,10 +243,15 @@ function CompositionBar({ ibt, pt }: { ibt: number; pt: number }) {
 // ─── Main Page ───
 export function PoolDetail() {
   const { id } = useParams();
-  const navigate = useNavigate();
-  const pool = POOL_DATA[id || "1"] || POOL_DATA["1"];
-  const [mode, setMode] = useState<"add" | "remove">("add");
-  const [inputAmount, setInputAmount] = useState("");
+  const [history] = useState<HistoryEntry[]>(INITIAL_HISTORY);
+
+  // Pool-specific data (would come from API in production)
+  const poolToken = id === "2" ? "stXRP" : "avUSD";
+  const protocol = id === "2" ? "Firelight" : "Avant";
+  const iconColor = id === "2" ? "#f97316" : "#ef4444";
+  const iconChar = id === "2" ? "✦" : "A";
+
+  const handleCancelOrder = useCallback(() => {}, []);
 
   return (
     <div className="flex-1 min-w-0 font-['Inter']">
@@ -117,293 +260,109 @@ export function PoolDetail() {
         {/* ── TOP BAR ── */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-0 px-3 sm:px-5 py-3 border-b border-white/[0.06]">
           <div className="flex items-center gap-2.5 shrink-0">
-            <button onClick={() => navigate("/pools")} className="text-white/30 hover:text-white/60 transition-colors mr-1">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 4L6 8L10 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
-            </button>
-            <div className="rounded-full flex items-center justify-center" style={{ width: 16, height: 16, backgroundColor: pool.chainColor }}>
-              <span className="text-white text-[7px]" style={{ fontWeight: 700 }}>{pool.chainChar}</span>
+            <EthereumIcon size={16} />
+            <div className="relative flex items-center justify-center" style={{ width: 30, height: 30 }}>
+              <SpectraIcon size={30} />
             </div>
-            <SmallTokenCircle color={pool.iconColor} char={pool.iconChar} size={30} />
             <div className="flex flex-col gap-[2px]">
-              <span className="text-[13px] text-white leading-tight" style={{ fontWeight: 500 }}>{pool.token}</span>
-              <span className="text-[10px] text-white/40 leading-tight" style={{ fontWeight: 400 }}>{pool.protocol}</span>
+              <span className="text-[13px] text-white truncate leading-tight" style={{ fontWeight: 400 }}>{poolToken}</span>
+              <span className="text-[10px] text-white/40 leading-tight" style={{ fontWeight: 400 }}>{protocol}</span>
             </div>
           </div>
           <div className="flex-1" />
           <div className="grid grid-cols-2 sm:flex sm:items-center gap-3 sm:gap-8 w-full sm:w-auto">
-            <div className="flex flex-col gap-[4px]">
-              <span className="text-[10px] text-white/35 uppercase tracking-wider" style={{ fontWeight: 500 }}>Maturity</span>
-              <span className="text-[12px] sm:text-[13px] text-white" style={{ fontWeight: 400 }}>{pool.maturity}</span>
+            <div className="flex flex-col gap-[6px]">
+              <div className="flex items-center gap-1">
+                <span className="text-[10px] text-white/35 uppercase tracking-wider" style={{ fontWeight: 500 }}>Maturity</span>
+                <InfoTooltip text="The date when LP tokens can be redeemed for the underlying assets." />
+              </div>
+              <span className="text-[12px] sm:text-[13px] text-white" style={{ fontWeight: 400 }}>Jun 04, 2026</span>
             </div>
-            <div className="flex flex-col gap-[4px]">
-              <span className="text-[10px] text-white/35 uppercase tracking-wider" style={{ fontWeight: 500 }}>Liquidity</span>
-              <span className="text-[12px] sm:text-[13px] text-white" style={{ fontWeight: 400 }}>{pool.liquidity}</span>
+            <div className="flex flex-col gap-[6px]">
+              <div className="flex items-center gap-1">
+                <span className="text-[10px] text-white/35 uppercase tracking-wider" style={{ fontWeight: 500 }}>Liquidity</span>
+              </div>
+              <span className="text-[12px] sm:text-[13px] text-white" style={{ fontWeight: 400 }}>$9,399,611</span>
             </div>
-            <div className="flex flex-col gap-[4px]">
-              <span className="text-[10px] text-white/35 uppercase tracking-wider" style={{ fontWeight: 500 }}>Default Token</span>
-              <span className="text-[12px] sm:text-[13px] text-white" style={{ fontWeight: 400 }}>{pool.defaultToken}</span>
+            <div className="flex flex-col gap-[6px]">
+              <div className="flex items-center gap-1">
+                <span className="text-[10px] text-white/35 uppercase tracking-wider" style={{ fontWeight: 500 }}>Default Token</span>
+                <InfoTooltip text="The default token used for deposits and withdrawals." />
+              </div>
+              <span className="text-[12px] sm:text-[13px] text-white" style={{ fontWeight: 400 }}>{poolToken}</span>
             </div>
-            <div className="flex flex-col gap-[4px]">
-              <span className="text-[10px] text-white/35 uppercase tracking-wider" style={{ fontWeight: 500 }}>Pool APY</span>
-              <span className="text-[12px] sm:text-[13px] text-[#00f99b]" style={{ fontWeight: 600 }}>{pool.apy}</span>
+            <div className="flex flex-col gap-[6px]">
+              <div className="flex items-center gap-1">
+                <span className="text-[10px] text-white/35 uppercase tracking-wider" style={{ fontWeight: 500 }}>Pool APY</span>
+                <InfoTooltip text="Total APY including PT fixed rate, LP fees, and LP rewards." />
+              </div>
+              <span className="text-[12px] sm:text-[13px] text-[#d65ce9]" style={{ fontWeight: 600 }}>1.86%</span>
             </div>
           </div>
         </div>
 
-        {/* ── DESCRIPTION BAR ── */}
-        <div className="flex items-center justify-between px-3 sm:px-5 py-[8px] border-b border-white/[0.06]">
-          <div className="flex items-center gap-3">
-            <span className="text-[12px] text-white/50" style={{ fontWeight: 400 }}>Earn pool fees and incentives by providing liquidity.</span>
-            <span className="text-[11px] bg-[#00f99b]/15 text-[#00f99b] px-2 py-[2px] rounded-full" style={{ fontWeight: 600 }}>Pool APY: {pool.apy}</span>
+        {/* ── STATS TICKER ── */}
+        <div className="flex items-center px-3 sm:px-5 py-[7px] border-b border-white/[0.06] overflow-x-auto scrollbar-hide gap-0">
+          <div className="flex items-center gap-2.5 pr-5 border-r border-white/[0.06] shrink-0">
+            <span className="text-[11px] text-white/35 leading-none" style={{ fontWeight: 400 }}>Liquidity</span>
+            <span className="text-[12px] text-white leading-none" style={{ fontWeight: 600 }}>$9.4M</span>
+            <ChangePill value="+0.12%" color="green" />
           </div>
-          <div className="hidden sm:flex items-center gap-2">
-            <button className="border border-white/[0.08] rounded px-2.5 py-[4px] hover:bg-white/[0.08] transition-colors">
-              <span className="text-[11px] text-white/70" style={{ fontWeight: 400 }}>Details</span>
+          <div className="flex items-center gap-2.5 px-5 border-r border-white/[0.06] shrink-0">
+            <span className="text-[11px] text-white/35 leading-none" style={{ fontWeight: 400 }}>30d Volume</span>
+            <span className="text-[12px] text-white leading-none" style={{ fontWeight: 600 }}>$7M</span>
+          </div>
+          <div className="flex items-center gap-2.5 px-5 border-r border-white/[0.06] shrink-0">
+            <span className="text-[11px] text-white/35 leading-none" style={{ fontWeight: 400 }}>Underlying APY</span>
+            <span className="text-[12px] text-[#6988ff] leading-none" style={{ fontWeight: 600 }}>2.83%</span>
+          </div>
+          <div className="flex items-center gap-2.5 px-5 shrink-0">
+            <span className="text-[11px] text-white/35 leading-none" style={{ fontWeight: 400 }}>Implied APY</span>
+            <span className="text-[12px] text-[#00f99b] leading-none" style={{ fontWeight: 600 }}>5.61%</span>
+          </div>
+          <div className="flex-1 min-w-[20px]" />
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            <button className="bg-[#d65ce9]/15 hover:bg-[#d65ce9]/25 border border-[#d65ce9]/30 rounded-md px-2 sm:px-3 py-[5px] transition-all">
+              <span className="text-[11px] sm:text-[12px] text-[#d65ce9] leading-none whitespace-nowrap" style={{ fontWeight: 500 }}>Pool</span>
             </button>
-            <button className="border border-white/[0.08] rounded px-2.5 py-[4px] hover:bg-white/[0.08] transition-colors">
-              <span className="text-[11px] text-white/70" style={{ fontWeight: 400 }}>Tokenize</span>
+            <button className="bg-white/[0.04] hover:bg-white/[0.07] border border-white/[0.08] hover:border-white/[0.14] rounded-md px-2 sm:px-3 py-[5px] transition-all">
+              <span className="text-[11px] sm:text-[12px] text-white/70 leading-none" style={{ fontWeight: 400 }}>Tokenize</span>
+            </button>
+            <button className="bg-white/[0.04] hover:bg-white/[0.07] border border-white/[0.08] hover:border-white/[0.14] rounded-md px-2 sm:px-3 py-[5px] transition-all">
+              <span className="text-[11px] sm:text-[12px] text-white/70 leading-none" style={{ fontWeight: 400 }}>Details</span>
             </button>
           </div>
         </div>
 
         {/* ── MAIN CONTENT ── */}
         <div className="flex flex-col lg:flex-row flex-1">
-
-          {/* LEFT: Add / Remove Form */}
+          {/* LEFT: Add/Remove Liquidity */}
           <div className="w-full lg:w-[420px] xl:w-[440px] lg:shrink-0 border-b lg:border-b-0 lg:border-r border-white/[0.06] overflow-y-auto">
-            <div className="p-3 sm:p-4 flex flex-col gap-4">
-
-              {/* Add / Remove toggle */}
-              <div className="flex bg-white/[0.04] rounded-[10px] p-[3px] border border-white/[0.06]">
-                <ToggleButton active={mode === "add"} label="Add" onClick={() => setMode("add")} />
-                <ToggleButton active={mode === "remove"} label="Remove" onClick={() => setMode("remove")} />
-              </div>
-
-              {mode === "add" ? (
-                /* ─── ADD LIQUIDITY ─── */
-                <>
-                  <div className="flex flex-col gap-1.5">
-                    <span className="text-[12px] text-white/50" style={{ fontWeight: 400 }}>Input</span>
-                    <div className="flex items-center bg-white/[0.03] border border-white/[0.08] rounded-[10px] px-4 py-3">
-                      <div className="flex-1">
-                        <input type="text" placeholder="0" value={inputAmount} onChange={(e) => setInputAmount(e.target.value)}
-                          className="bg-transparent text-[20px] text-white outline-none w-full" style={{ fontWeight: 500 }} />
-                        <span className="text-[11px] text-white/25" style={{ fontWeight: 400 }}>≈$0</span>
-                      </div>
-                      <button className="flex items-center gap-2 bg-white/[0.06] border border-white/[0.08] rounded-[8px] px-3 py-[6px] hover:bg-white/[0.08] transition-colors">
-                        <SmallTokenCircle color={pool.iconColor} char={pool.iconChar} size={20} />
-                        <span className="text-[12px] text-white" style={{ fontWeight: 500 }}>Select</span>
-                        <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="white" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <div className="w-[32px] h-[3px] rounded-full bg-[#00f99b]/30" />
-                    <span className="text-[11px] text-white/40" style={{ fontWeight: 400 }}>Balanced Mode (Recommended)</span>
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="text-white/25"><circle cx="6" cy="6" r="5" stroke="currentColor" strokeWidth="1" /><path d="M5.2 4.8C5.2 4.2 5.6 3.8 6 3.8S6.8 4.1 6.8 4.5C6.8 5 6.4 5.1 6 5.5V6.2" stroke="currentColor" strokeWidth="0.9" strokeLinecap="round" /><circle cx="6" cy="7.3" r="0.4" fill="currentColor" /></svg>
-                  </div>
-
-                  <div className="flex flex-col gap-2">
-                    <span className="text-[12px] text-white/50" style={{ fontWeight: 400 }}>Output</span>
-                    <div className="flex items-center justify-between py-2 border-b border-white/[0.04]">
-                      <div className="flex items-center gap-2">
-                        <SmallTokenCircle color="#d65ce9" char="LP" size={22} />
-                        <span className="text-[12px] text-white/70" style={{ fontWeight: 400 }}>LP-{pool.token}-{pool.maturity.replace(/ /g, "/").slice(-8)}</span>
-                      </div>
-                      <span className="text-[12px] text-white/30" style={{ fontWeight: 400 }}>—</span>
-                    </div>
-                    <div className="flex items-center justify-between py-2 border-b border-white/[0.04]">
-                      <div className="flex items-center gap-2">
-                        <SmallTokenCircle color="#f4c071" char="YT" size={22} />
-                        <span className="text-[12px] text-white/70" style={{ fontWeight: 400 }}>YT-{pool.token}-{pool.maturity.replace(/ /g, "/").slice(-8)}</span>
-                      </div>
-                      <span className="text-[12px] text-white/30" style={{ fontWeight: 400 }}>—</span>
-                    </div>
-                  </div>
-
-                  <InfoRow label="Pool Share" value="—" />
-                  <InfoRow label="Implied APY Change" value="—" tooltip="The change in implied APY after your action." />
-                  <InfoRow label="New Pool APY" value="—" tooltip="The projected pool APY after your deposit." />
-
-                  <details className="group">
-                    <summary className="flex items-center justify-between cursor-pointer py-2 border-t border-white/[0.06]">
-                      <span className="text-[12px] text-white/50" style={{ fontWeight: 400 }}>Details</span>
-                      <svg width="10" height="6" viewBox="0 0 10 6" fill="none" className="transition-transform group-open:rotate-180"><path d="M1 1L5 5L9 1" stroke="white" strokeOpacity="0.3" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                    </summary>
-                    <div className="pt-2 text-[11px] text-white/30" style={{ fontWeight: 400 }}>Detailed transaction breakdown will appear here after entering an amount.</div>
-                  </details>
-
-                  <button className="w-full bg-[#00f99b] hover:bg-[#00e08a] text-black rounded-[10px] py-[12px] text-[14px] transition-colors" style={{ fontWeight: 600 }}>
-                    Connect Wallet
-                  </button>
-                </>
-              ) : (
-                /* ─── REMOVE LIQUIDITY ─── */
-                <>
-                  <span className="text-[12px] text-white/50" style={{ fontWeight: 400 }}>Choose how much to withdraw</span>
-
-                  <div className="flex items-center bg-white/[0.03] border border-white/[0.08] rounded-[10px] px-4 py-3">
-                    <div className="flex-1">
-                      <input type="text" placeholder="0" value={inputAmount} onChange={(e) => setInputAmount(e.target.value)}
-                        className="bg-transparent text-[20px] text-white outline-none w-full" style={{ fontWeight: 500 }} />
-                      <span className="text-[11px] text-white/25" style={{ fontWeight: 400 }}>≈$0</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <SmallTokenCircle color="#d65ce9" char="LP" size={22} />
-                      <span className="text-[12px] text-white/60" style={{ fontWeight: 400 }}>LP-{pool.token}-...</span>
-                    </div>
-                  </div>
-
-                  <div className="flex gap-2">
-                    <PercentButton label="25%" onClick={() => {}} />
-                    <PercentButton label="50%" onClick={() => {}} />
-                    <PercentButton label="75%" onClick={() => {}} />
-                    <PercentButton label="100%" onClick={() => {}} />
-                  </div>
-
-                  <div className="border-t border-white/[0.06]" />
-
-                  <div className="flex items-center gap-2">
-                    <div className="w-[32px] h-[3px] rounded-full bg-[#00f99b]/30" />
-                    <span className="text-[11px] text-white/40" style={{ fontWeight: 400 }}>No Price Impact Mode</span>
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="text-white/25"><circle cx="6" cy="6" r="5" stroke="currentColor" strokeWidth="1" /><path d="M5.2 4.8C5.2 4.2 5.6 3.8 6 3.8S6.8 4.1 6.8 4.5C6.8 5 6.4 5.1 6 5.5V6.2" stroke="currentColor" strokeWidth="0.9" strokeLinecap="round" /><circle cx="6" cy="7.3" r="0.4" fill="currentColor" /></svg>
-                  </div>
-
-                  <div className="flex flex-col gap-2">
-                    <span className="text-[12px] text-white/50" style={{ fontWeight: 400 }}>Output</span>
-                    <div className="flex items-center justify-between py-2 border-b border-white/[0.04]">
-                      <div className="flex items-center gap-2">
-                        <SmallTokenCircle color={pool.iconColor} char={pool.iconChar} size={22} />
-                        <span className="text-[12px] text-white/70" style={{ fontWeight: 400 }}>{pool.defaultToken}</span>
-                      </div>
-                      <span className="text-[12px] text-white/30" style={{ fontWeight: 400 }}>—</span>
-                    </div>
-                    <div className="flex items-center justify-between py-2 border-b border-white/[0.04]">
-                      <div className="flex items-center gap-2">
-                        <SmallTokenCircle color="#00f99b" char="PT" size={22} />
-                        <span className="text-[12px] text-white/70" style={{ fontWeight: 400 }}>PT-{pool.token}-{pool.maturity.replace(/ /g, "/").slice(-8)}</span>
-                      </div>
-                      <span className="text-[12px] text-white/30" style={{ fontWeight: 400 }}>—</span>
-                    </div>
-                  </div>
-
-                  <InfoRow label="Pool Share" value="—" />
-
-                  {/* MetaVault upsell */}
-                  <div className="flex flex-col gap-2 mt-2">
-                    <span className="text-[12px] text-white/50" style={{ fontWeight: 400 }}>
-                      Continue earning up to <span className="text-[#00f99b]" style={{ fontWeight: 600 }}>5.25% APY</span> via MetaVault <span className="text-[10px] bg-white/[0.06] text-white/40 px-1.5 py-[1px] rounded-full" style={{ fontWeight: 500 }}>New</span>
-                    </span>
-                    <button onClick={() => navigate("/metavaults")} className="flex items-center justify-between bg-white/[0.03] border border-white/[0.08] rounded-[10px] p-3 hover:bg-white/[0.05] transition-colors">
-                      <div className="flex items-center gap-2.5">
-                        <SmallTokenCircle color={pool.iconColor} char={pool.iconChar} size={28} />
-                        <div className="flex flex-col">
-                          <span className="text-[12px] text-[#00f99b]" style={{ fontWeight: 600 }}>Flare XRP Yield Prime</span>
-                          <span className="text-[10px] text-white/40" style={{ fontWeight: 400 }}>Gami Labs</span>
-                        </div>
-                      </div>
-                      <span className="text-[11px] text-white border border-white/[0.12] rounded-[6px] px-2.5 py-[5px]" style={{ fontWeight: 500 }}>Open MetaVault</span>
-                    </button>
-                    <span className="text-[11px] text-white/30" style={{ fontWeight: 400 }}>Or remove liquidity from the pool</span>
-                  </div>
-
-                  <button className="w-full bg-[#00f99b] hover:bg-[#00e08a] text-black rounded-[10px] py-[12px] text-[14px] transition-colors" style={{ fontWeight: 600 }}>
-                    Connect Wallet
-                  </button>
-                </>
-              )}
+            <div className="p-3 sm:p-4">
+              <LiquidityForm poolToken={poolToken} iconColor={iconColor} iconChar={iconChar} />
             </div>
           </div>
 
-          {/* RIGHT: Chart + Activity + Pool Info */}
-          <div className="flex-1 min-w-0 flex flex-col">
-
-            {/* Chart placeholder */}
-            <div className="flex-1 min-h-[300px] sm:min-h-[340px] flex flex-col p-3 sm:p-4 border-b border-white/[0.06]">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-1.5"><span className="w-[6px] h-[6px] rounded-full bg-[#f4c071]" /><span className="text-[11px] text-white/40" style={{ fontWeight: 400 }}>Base APY (30d)</span></div>
-                  <div className="flex items-center gap-1.5"><span className="w-[6px] h-[6px] rounded-full bg-[#00f99b]" /><span className="text-[11px] text-white/40" style={{ fontWeight: 400 }}>Implied APY</span></div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <button className="text-[11px] text-white/40 hover:text-white/60 transition-colors" style={{ fontWeight: 400 }}>APY ▾</button>
-                  <button className="text-[11px] text-white/40 hover:text-white/60 transition-colors" style={{ fontWeight: 400 }}>Tools ▾</button>
-                </div>
-              </div>
-              <div className="flex-1 flex items-center justify-center bg-white/[0.02] rounded-[8px] border border-white/[0.04]">
-                <span className="text-[12px] text-white/15" style={{ fontWeight: 400 }}>APY Chart</span>
-              </div>
-              <div className="flex items-center justify-between mt-2">
-                <span className="text-[10px] text-white/25" style={{ fontWeight: 400 }}>30d Volume: $7M · Lifetime: $10.7M</span>
-                <div className="flex items-center gap-2">
-                  <button className="text-[10px] text-white/30 hover:text-white/50 transition-colors" style={{ fontWeight: 400 }}>Custom</button>
-                  <button className="text-[10px] bg-white/[0.06] text-white/50 px-2 py-[2px] rounded" style={{ fontWeight: 500 }}>All</button>
-                </div>
-              </div>
+          {/* RIGHT: Chart + Activity */}
+          <div className="flex-1 min-w-0 flex flex-col min-h-0">
+            <div className="flex-1 min-h-[300px] sm:min-h-[360px] md:min-h-[420px] flex flex-col p-3 sm:p-4 border-b border-white/[0.06]">
+              <ChartPanel assetType="PT" flat />
             </div>
-
-            {/* Activity Table */}
-            <div className="min-h-[200px] border-b border-white/[0.06]">
-              <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/[0.06]">
-                <span className="text-[13px] text-white" style={{ fontWeight: 600 }}>Activity</span>
-                <button className="text-[11px] text-white/40 hover:text-white/60 transition-colors" style={{ fontWeight: 400 }}>All ▾</button>
-              </div>
-              <div className="overflow-x-auto">
-                <div className="flex items-center px-4 py-[8px] border-b border-white/[0.06] min-w-[400px]">
-                  <div className="w-[25%]"><span className="text-[10px] text-white/30 uppercase tracking-wider" style={{ fontWeight: 500 }}>Action</span></div>
-                  <div className="w-[20%]"><span className="text-[10px] text-white/30 uppercase tracking-wider" style={{ fontWeight: 500 }}>Value</span></div>
-                  <div className="w-[25%]"><span className="text-[10px] text-white/30 uppercase tracking-wider" style={{ fontWeight: 500 }}>Time</span></div>
-                  <div className="flex-1 text-right"><span className="text-[10px] text-white/30 uppercase tracking-wider" style={{ fontWeight: 500 }}>User</span></div>
-                </div>
-                {POOL_ACTIVITY.map((a, i) => (
-                  <div key={i} className="flex items-center px-4 py-[8px] border-b border-white/[0.04] hover:bg-white/[0.06] transition-colors min-w-[400px]">
-                    <div className="w-[25%]"><span className="text-[12px] text-[#00f99b]" style={{ fontWeight: 500 }}>{a.action}</span></div>
-                    <div className="w-[20%]"><span className="text-[12px] text-white" style={{ fontWeight: 500 }}>{a.value}</span></div>
-                    <div className="w-[25%]"><span className="text-[12px] text-white/40" style={{ fontWeight: 400 }}>{a.time}</span></div>
-                    <div className="flex-1 text-right"><span className="text-[11px] text-[#6988ff] font-mono" style={{ fontWeight: 400 }}>{a.user}</span></div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Pool Info + APY Breakdown */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
-              {/* Pool Info */}
-              <div className="p-4 border-b md:border-b-0 md:border-r border-white/[0.06]">
-                <span className="text-[13px] text-white mb-3 block" style={{ fontWeight: 600 }}>Pool Info</span>
-                <InfoRow label="Default Input/Output Token" value={pool.defaultToken} tooltip="The default token used for swaps." />
-                <InfoRow label="Underlying" value={pool.underlying} />
-                <InfoRow label="APY" value={pool.apy} accent />
-                <InfoRow label="Liquidity" value={pool.liquidity} />
-                <InfoRow label="Maturity" value={pool.maturity} />
-                <InfoRow label="Swap Fee" value={pool.swapFee} />
-                <div className="mt-3">
-                  <CompositionBar ibt={pool.poolComposition.ibt} pt={pool.poolComposition.pt} />
-                </div>
-              </div>
-              {/* APY Breakdown */}
-              <div className="p-4">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-[13px] text-white" style={{ fontWeight: 600 }}>Pool APY Breakdown</span>
-                  <span className="text-[13px] text-[#00f99b]" style={{ fontWeight: 600 }}>{pool.apy}</span>
-                </div>
-                <InfoRow label="PT Fixed Rate" value={pool.apyBreakdown.ptFixed} />
-                <InfoRow label="LP Fees" value={pool.apyBreakdown.lpFees} tooltip="Fees earned from swaps in the pool." />
-                <InfoRow label="LP Rewards" value={pool.apyBreakdown.lpRewards} />
-                {pool.apyBreakdown.rewardTokens.map((rt) => (
-                  <div key={rt.name} className="flex items-center justify-between py-[6px] pl-4">
-                    <div className="flex items-center gap-2">
-                      <SmallTokenCircle color={rt.color} char={rt.name[0]} size={16} />
-                      <span className="text-[11px] text-white/40" style={{ fontWeight: 400 }}>{rt.name}</span>
-                    </div>
-                    <span className="text-[11px] text-white/60" style={{ fontWeight: 400 }}>{rt.apy}</span>
-                  </div>
-                ))}
+            <div className="min-h-[280px] overflow-y-auto">
+              <div className="px-2 sm:px-3 py-2">
+                <ActivityTable
+                  orders={[]}
+                  history={history}
+                  onCancelOrder={handleCancelOrder}
+                  flat
+                  hideOrders
+                />
               </div>
             </div>
           </div>
         </div>
+
+        <BottomStatusBar />
       </div>
     </div>
   );

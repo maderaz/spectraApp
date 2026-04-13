@@ -657,13 +657,15 @@ export function ActivityTable({
   history,
   onCancelOrder,
   flat,
+  hideOrders,
 }: {
   orders: Order[];
   history: HistoryEntry[];
   onCancelOrder: (id: string) => void;
   flat?: boolean;
+  hideOrders?: boolean;
 }) {
-  const [activeTab, setActiveTab] = useState<TabKey>("activity");
+  const [activeTab, setActiveTab] = useState<TabKey>(hideOrders ? "history" : "activity");
   const [posFilter, setPosFilter] = useState<PositionFilter>("All");
   const prevOrderCountRef = useRef(orders.length);
 
@@ -681,7 +683,7 @@ export function ActivityTable({
       <div className="flex flex-wrap items-center border-b border-white/[0.06] mb-1">
         {/* Left: main tabs */}
         <div className="flex items-center gap-0">
-          {TABS.map((tab) => {
+          {TABS.filter((tab) => !(hideOrders && tab.key === "orders")).map((tab) => {
             const isActive = activeTab === tab.key;
             return (
               <button

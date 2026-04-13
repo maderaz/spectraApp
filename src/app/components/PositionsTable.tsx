@@ -265,23 +265,9 @@ function PnlCell({ value, percent }: { value: string; percent: string }) {
   );
 }
 
-function FixedYieldTooltip({ value }: { value: number }) {
-  const [show, setShow] = useState(false);
+function FixedYieldUsd({ value }: { value: number }) {
   const formatted = `$${Math.abs(value).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-  return (
-    <span className="relative" onMouseEnter={() => setShow(true)} onMouseLeave={() => setShow(false)}>
-      <span className="text-[10px] text-white/30 cursor-default leading-none" style={{ fontWeight: 400 }}>
-        ≈{formatted}
-      </span>
-      {show && (
-        <div className="absolute left-0 top-full mt-1.5 z-50 w-[200px] px-3 py-2 bg-[#2a2a2e] border border-white/[0.12] rounded-lg shadow-xl">
-          <span className="text-[10px] text-white/70 leading-relaxed" style={{ fontWeight: 400 }}>
-            USD value based on current market prices. Subject to fluctuation until maturity.
-          </span>
-        </div>
-      )}
-    </span>
-  );
+  return <span className="text-[10px] text-white/30" style={{ fontWeight: 400 }}>≈{formatted}</span>;
 }
 
 function PoolCell({ pool }: { pool: string }) {
@@ -384,7 +370,7 @@ function PTPositionsTab({ positions }: { positions: Position[] }) {
               <span className="text-[12px] sm:text-[13px]" style={{ fontWeight: 500, color: fixedYieldTokens >= 0 ? "#00f99b" : "#ef6b6b" }}>
                 {fixedYieldTokens >= 0 ? "+" : ""}{Math.abs(fixedYieldTokens).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {tokenName}
               </span>
-              <FixedYieldTooltip value={fixedYieldUsd} />
+              <FixedYieldUsd value={fixedYieldUsd} />
             </div>
           </div>
           <div className="flex-1 min-w-[80px]"><span className="text-[11px] text-white/40" style={{ fontWeight: 400 }}>{pos.maturity}</span></div>
