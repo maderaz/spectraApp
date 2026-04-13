@@ -315,7 +315,7 @@ export function MetaVaults() {
             {VAULTS.map((vault) => (
               <button
                 key={vault.id}
-                className="flex items-center px-5 py-3.5 border-b border-white/[0.06] hover:bg-white/[0.02] transition-colors text-left"
+                className="flex items-center px-5 py-[12px] border-b border-white/[0.06] hover:bg-white/[0.02] transition-colors text-left"
               >
                 {/* Vault */}
                 <div className="flex-[2] flex items-center gap-3 min-w-0">

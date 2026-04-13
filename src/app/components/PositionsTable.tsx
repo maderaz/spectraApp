@@ -319,7 +319,7 @@ function PTPositionsTab({ positions }: { positions: Position[] }) {
       )}
 
       {sorted.map((pos, i) => (
-        <div key={pos.id} className={`${ROW} ${i % 2 === 1 ? "bg-white/[0.02]" : ""} hover:bg-white/[0.03] transition-colors`}>
+        <div key={pos.id} className={`${ROW} ${i % 2 === 1 ? "bg-white/[0.02]" : ""} hover:bg-white/[0.02] transition-colors`}>
           <div className="flex-1 min-w-[140px]"><PositionCell position={pos.position} accent={accent} /></div>
           <div className="flex-1 min-w-[110px]">
             <div className="flex flex-col gap-[1px]">
@@ -383,7 +383,7 @@ function YTPositionsTab({ positions }: { positions: Position[] }) {
       )}
 
       {sorted.map((pos, i) => (
-        <div key={pos.id} className={`${ROW} ${i % 2 === 1 ? "bg-white/[0.02]" : ""} hover:bg-white/[0.03] transition-colors`}>
+        <div key={pos.id} className={`${ROW} ${i % 2 === 1 ? "bg-white/[0.02]" : ""} hover:bg-white/[0.02] transition-colors`}>
           <div className="flex-1 min-w-[140px]"><PositionCell position={pos.position} accent={accent} /></div>
           <div className="flex-1 min-w-[110px]">
             <div className="flex flex-col gap-[1px]">
@@ -452,7 +452,7 @@ function LPPositionsTab({ positions }: { positions: Position[] }) {
       )}
 
       {sorted.map((pos, i) => (
-        <div key={pos.id} className={`${ROW} ${i % 2 === 1 ? "bg-white/[0.02]" : ""} hover:bg-white/[0.03] transition-colors`}>
+        <div key={pos.id} className={`${ROW} ${i % 2 === 1 ? "bg-white/[0.02]" : ""} hover:bg-white/[0.02] transition-colors`}>
           <div className="flex-1 min-w-[140px]"><PositionCell position={pos.position} accent={accent} /></div>
           <div className="flex-1 min-w-[110px]">
             <div className="flex flex-col gap-[1px]">
@@ -518,7 +518,7 @@ function MVPositionsTab({ positions }: { positions: MVPosition[] }) {
       )}
 
       {sorted.map((pos, i) => (
-        <div key={pos.id} className={`${ROW} ${i % 2 === 1 ? "bg-white/[0.02]" : ""} hover:bg-white/[0.03] transition-colors`}>
+        <div key={pos.id} className={`${ROW} ${i % 2 === 1 ? "bg-white/[0.02]" : ""} hover:bg-white/[0.02] transition-colors`}>
           <div className="flex-1 min-w-[160px]">
             <div className="flex items-center gap-2">
               <EthereumIcon size={14} />
