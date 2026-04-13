@@ -310,6 +310,7 @@ const NAV_SECTIONS: NavSection[] = [
     key: "governance",
     title: "Governance",
     collapsible: true,
+    defaultCollapsed: true,
     items: [
       { label: "Gauges", icon: <GaugesIcon /> },
       { label: "Incentivize", icon: <IncentivizeIcon /> },
@@ -320,7 +321,7 @@ const NAV_SECTIONS: NavSection[] = [
     key: "tools",
     title: "Tools",
     collapsible: true,
-    defaultCollapsed: false,
+    defaultCollapsed: true,
     items: [
       { label: "PT Bridge", icon: <BridgeIcon />, href: "/pt-bridge" },
       { label: "Flare Rewards", icon: <FlareRewardsIcon />, href: "/rewards" },
@@ -342,10 +343,10 @@ function NavItemRow({ item, isRouteActive, onNavigate }: { item: NavItem; isRout
       }}
       className={`flex items-center gap-2 w-full rounded-[6px] px-2 py-[5px] transition-colors text-left ${
         isActive
-          ? "bg-white/[0.06]"
+          ? "bg-[#2a2a2e]"
           : item.dimmed
           ? "opacity-100"
-          : "hover:bg-white/[0.08] active:bg-white/[0.12]"
+          : "hover:bg-[#252528] active:bg-[#2f2f33]"
       }`}
     >
       <div className="shrink-0 w-6 h-6 flex items-center justify-center">
@@ -436,7 +437,7 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
 
       {/* Wallet Button */}
       <div className="px-5 py-2.5">
-        <button className="flex items-center gap-2 w-full bg-white/[0.04] rounded-[6px] px-3 py-[8px] hover:bg-white/[0.07] transition-colors border border-white/[0.06]">
+        <button className="flex items-center gap-2 w-full bg-white/[0.04] rounded-[6px] px-3 py-[8px] hover:bg-[#252528] transition-colors border border-white/[0.06]">
           <div className="flex items-center -space-x-1">
             <HemiIcon />
             <MultiColorIcon />
@@ -503,8 +504,8 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
       <div className="px-5 pb-4 pt-1.5 border-t border-white/[0.06] flex flex-col gap-0">
         <button
           onClick={() => handleNavigate("/brand-components")}
-          className={`flex items-center gap-2 w-full px-2 py-[4px] hover:bg-white/[0.08] active:bg-white/[0.12] rounded-[6px] transition-colors text-left ${
-            location.pathname === "/brand-components" ? "bg-white/[0.06]" : ""
+          className={`flex items-center gap-2 w-full px-2 py-[4px] hover:bg-[#252528] active:bg-[#2f2f33] rounded-[6px] transition-colors text-left ${
+            location.pathname === "/brand-components" ? "bg-[#2a2a2e]" : ""
           }`}
         >
           <div className="shrink-0 w-5 h-5 flex items-center justify-center">
@@ -519,13 +520,13 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
             Brand Components
           </span>
         </button>
-        <button className="flex items-center gap-2 w-full px-2 py-[4px] hover:bg-white/[0.08] active:bg-white/[0.12] rounded-[6px] transition-colors text-left">
+        <button className="flex items-center gap-2 w-full px-2 py-[4px] hover:bg-[#252528] active:bg-[#2f2f33] rounded-[6px] transition-colors text-left">
           <div className="shrink-0 w-5 h-5 flex items-center justify-center">
             <SettingsIcon />
           </div>
           <span className="text-[11px] text-white/50" style={{ fontWeight: 400 }}>Settings</span>
         </button>
-        <button className="flex items-center gap-2 w-full px-2 py-[4px] hover:bg-white/[0.08] active:bg-white/[0.12] rounded-[6px] transition-colors text-left">
+        <button className="flex items-center gap-2 w-full px-2 py-[4px] hover:bg-[#252528] active:bg-[#2f2f33] rounded-[6px] transition-colors text-left">
           <div className="shrink-0 w-5 h-5 flex items-center justify-center">
             <SupportIcon />
           </div>
