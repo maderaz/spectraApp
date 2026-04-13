@@ -631,7 +631,7 @@ export function PositionsTable() {
               key={t.key}
               onClick={() => setTab(t.key)}
               className={`relative px-4 py-[10px] transition-colors whitespace-nowrap shrink-0 ${
-                active ? "text-white" : "text-white/35 hover:text-white/60"
+                active ? "text-white" : "text-white/35 hover:text-white/60 hover:bg-white/[0.04]"
               }`}
             >
               <span className="text-[12px]" style={{ fontWeight: active ? 500 : 400 }}>

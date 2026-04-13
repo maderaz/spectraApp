@@ -240,7 +240,7 @@ export function Pools() {
     { key: "stables", label: "Stables" },
   ];
 
-  const H = "text-[10px] sm:text-[11px] text-white/40 uppercase tracking-wider cursor-pointer select-none whitespace-nowrap";
+  const H = "text-[10px] sm:text-[11px] text-white/40 uppercase tracking-wider cursor-pointer select-none whitespace-nowrap hover:text-white/60 transition-colors";
 
   return (
     <div className="flex-1 min-w-0 overflow-auto scrollbar-hide font-['Inter']">
