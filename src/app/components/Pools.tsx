@@ -377,31 +377,31 @@ export function Pools() {
         <div className="flex-1 min-h-0 flex flex-col overflow-x-auto">
           {/* Table header */}
           <div className="flex items-center px-4 py-[10px] border-b border-white/[0.06] shrink-0 min-w-[620px]">
-            <div className="w-[24%] min-w-[180px]">
+            <div className="w-[22%] min-w-[160px]">
               <span className={H} style={{ fontWeight: 500 }} onClick={() => toggleSort("pool")}>
                 Pool
                 <SortIcon active={sortKey === "pool"} dir={sortDir} />
               </span>
             </div>
-            <div className="w-[14%] min-w-[90px]">
+            <div className="w-[13%] min-w-[100px]">
               <span className={H} style={{ fontWeight: 500 }} onClick={() => toggleSort("apy")}>
                 Max APY
                 <SortIcon active={sortKey === "apy"} dir={sortDir} />
               </span>
             </div>
-            <div className="w-[18%] min-w-[120px]">
+            <div className="w-[15%] min-w-[110px]">
               <span className={H} style={{ fontWeight: 500 }} onClick={() => toggleSort("ibt")}>
                 IBT
                 <SortIcon active={sortKey === "ibt"} dir={sortDir} />
               </span>
             </div>
-            <div className="w-[18%] min-w-[100px]">
+            <div className="w-[14%] min-w-[90px]">
               <span className={H} style={{ fontWeight: 500 }} onClick={() => toggleSort("liquidity")}>
                 Liquidity
                 <SortIcon active={sortKey === "liquidity"} dir={sortDir} />
               </span>
             </div>
-            <div className="w-[18%] min-w-[100px]">
+            <div className="flex-1 min-w-[100px]">
               <span className={H} style={{ fontWeight: 500 }} onClick={() => toggleSort("expiry")}>
                 Expiry
                 <SortIcon active={sortKey === "expiry"} dir={sortDir} />
@@ -417,7 +417,7 @@ export function Pools() {
                 className="flex items-center px-4 py-[12px] border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors cursor-pointer group min-w-[620px]"
               >
                 {/* Pool */}
-                <div className="w-[24%] min-w-[180px]">
+                <div className="w-[22%] min-w-[160px]">
                   <div className="flex items-center gap-2.5">
                     {/* Network icon */}
                     <div className="w-[16px] flex items-center justify-center shrink-0">
@@ -438,7 +438,7 @@ export function Pools() {
                 </div>
 
                 {/* Max APY — green accent with hover breakdown */}
-                <div className="w-[14%] min-w-[90px] relative group/apy">
+                <div className="w-[13%] min-w-[100px] relative group/apy">
                   <span
                     className="text-[13px] text-[#00f99b] cursor-default"
                     style={{ fontWeight: 500, borderBottom: "1px dotted rgba(0,249,155,0.35)", paddingBottom: 1 }}
@@ -453,7 +453,7 @@ export function Pools() {
                 </div>
 
                 {/* IBT (Default Token) */}
-                <div className="w-[18%] min-w-[120px]">
+                <div className="w-[15%] min-w-[110px]">
                   <div className="flex items-center gap-2">
                     <SmallTokenCircle color={pool.ibtIconColor} char={pool.ibtIconChar} size={20} />
                     <span className="text-[13px] text-white/70" style={{ fontWeight: 400 }}>{pool.ibt}</span>
@@ -461,14 +461,14 @@ export function Pools() {
                 </div>
 
                 {/* Liquidity */}
-                <div className="w-[18%] min-w-[100px]">
+                <div className="w-[14%] min-w-[90px]">
                   <span className="text-[13px] text-white" style={{ fontWeight: 500 }}>
                     {formatLiquidity(pool.liquidity)}
                   </span>
                 </div>
 
                 {/* Expiry */}
-                <div className="w-[18%] min-w-[100px]">
+                <div className="flex-1 min-w-[100px]">
                   <span className="text-[13px] text-white/50" style={{ fontWeight: 400 }}>{pool.expiry}</span>
                 </div>
               </div>
