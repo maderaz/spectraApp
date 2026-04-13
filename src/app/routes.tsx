@@ -12,6 +12,7 @@ import { BrandComponents } from "./components/BrandComponents";
 import { FixedRates } from "./components/FixedRates";
 import { YieldLeverage } from "./components/YieldLeverage";
 import { Pools } from "./components/Pools";
+import { ActivityHistory } from "./components/ActivityHistory";
 
 function RedirectToHome() {
   return <Navigate to="/" replace />;
@@ -28,6 +29,7 @@ export const router = createBrowserRouter([
     children: [
       { index: true, Component: TradingUI },
       { path: "portfolio", Component: Portfolio },
+      { path: "activity", Component: ActivityHistory },
       { path: "metavaults", Component: MetaVaults },
       { path: "metavaults/:id", Component: MetaVaultDetail },
       { path: "dashboard", Component: Dashboard },
