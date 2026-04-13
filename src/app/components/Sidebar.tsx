@@ -268,13 +268,25 @@ function CloseIcon() {
   );
 }
 
+function ActivityHistoryIcon() {
+  return (
+    <svg width="24" height="25" viewBox="0 0 24 25" fill="none">
+      <circle cx="12" cy="13" r="9" stroke="white" strokeWidth="1.5" />
+      <path d="M12 8.5V13L15 15.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M3 5.5V9.5H7" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 // ─── Navigation Data ───
 
 const NAV_SECTIONS: NavSection[] = [
   {
-    key: "portfolio",
+    key: "account",
+    title: "My Account",
     items: [
       { label: "Portfolio", icon: <PortfolioIcon />, indicator: "#fde047", href: "/portfolio" },
+      { label: "Activity History", icon: <ActivityHistoryIcon />, href: "/activity" },
     ],
   },
   {
