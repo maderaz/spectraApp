@@ -129,10 +129,21 @@ const REWARD_CLAIMS: RewardClaim[] = [
 const TH = "text-[10px] sm:text-[11px] text-white/40 uppercase tracking-wider";
 
 // ─── Product tooltip ───
+function formatMaturity(d?: string): string | null {
+  if (!d) return null;
+  const [day, month, year] = d.split("/");
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  return `${parseInt(day)} ${months[parseInt(month) - 1]} 20${year}`;
+}
+
 function ProductCell({ activity, onClick }: { activity: Activity; onClick: () => void }) {
+  const maturityLabel = formatMaturity(activity.maturity);
   return (
     <button onClick={onClick} className="text-left group">
       <span className="text-[13px] text-white group-hover:text-[#00f99b] transition-colors" style={{ fontWeight: 500 }}>{activity.product}</span>
+      {maturityLabel && (
+        <span className="block text-[10px] text-white/30" style={{ fontWeight: 400 }}>{maturityLabel}</span>
+      )}
       {activity.productType === "metavault" && (
         <span className="block text-[10px] text-white/30" style={{ fontWeight: 400 }}>MetaVault</span>
       )}
