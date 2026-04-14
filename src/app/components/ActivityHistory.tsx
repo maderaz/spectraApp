@@ -180,8 +180,18 @@ export function ActivityHistory() {
     return list;
   })();
 
+  const MV_ID_MAP: Record<string, string> = {
+    "Gami USDC": "mv1",
+    "Morpho Blue ETH": "mv2",
+    "Steakhouse USDT": "mv3",
+  };
+
   const handleProductClick = (a: Activity) => {
-    if (a.productType === "metavault") { navigate("/metavaults"); return; }
+    if (a.productType === "metavault") {
+      const mvId = MV_ID_MAP[a.product];
+      navigate(mvId ? `/metavaults/${mvId}` : "/metavaults");
+      return;
+    }
     if (a.type === "Swap") { navigate(`/?asset=PT&pool=${a.product}`); return; }
     navigate("/pools");
   };
@@ -292,7 +302,9 @@ export function ActivityHistory() {
                         <NetworkIcon networkId={a.network} size={16} />
                       </div>
                       <div className="w-[25%] min-w-[120px]">
-                        <span className="text-[13px] text-white" style={{ fontWeight: 500 }}>{a.product}</span>
+                        <button onClick={() => handleProductClick(a)} className="text-left group">
+                          <span className="text-[13px] text-white group-hover:text-[#ff9900] transition-colors" style={{ fontWeight: 500 }}>{a.product}</span>
+                        </button>
                       </div>
                       <div className="flex-1 min-w-[80px]">
                         <span className="text-[13px] text-white" style={{ fontWeight: 500 }}>{a.value}</span>
