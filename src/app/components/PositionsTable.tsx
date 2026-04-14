@@ -477,7 +477,6 @@ function LPPositionsTab({ positions }: { positions: Position[] }) {
         <div className="w-[22%] min-w-[140px]"><SortableHeader label="Position" sortKey="position" currentSort={sort} onToggle={toggle} /></div>
         <div className="w-[18%] min-w-[110px]"><SortableHeader label="Balance" sortKey="balance" currentSort={sort} onToggle={toggle} /></div>
         <div className="w-[22%] min-w-[90px]"><SortableHeader label="APY" sortKey="apy" currentSort={sort} onToggle={toggle} /></div>
-        <div className="w-[18%] min-w-[100px]"><SortableHeader label="Lifetime Rewards" sortKey="rewards" currentSort={sort} onToggle={toggle} /></div>
         <div className="flex-1 min-w-[90px]"><SortableHeader label="Expiry" sortKey="expiry" currentSort={sort} onToggle={toggle} /></div>
       </div>
 
@@ -503,9 +502,6 @@ function LPPositionsTab({ positions }: { positions: Position[] }) {
                 <span className="text-[10px] text-white/30" style={{ fontWeight: 400 }}>{pos.apyBoost}</span>
               )}
             </div>
-          </div>
-          <div className="w-[18%] min-w-[100px]">
-            <span className={C} style={{ fontWeight: 500 }}>{pos.lifetimeRewards || "—"}</span>
           </div>
           <div className="flex-1 min-w-[90px]"><span className="text-[11px] text-white/40" style={{ fontWeight: 400 }}>{pos.maturity}</span></div>
         </div>
