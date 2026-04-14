@@ -157,19 +157,19 @@ const CLAIMABLE_REWARDS: Reward[] = [
 
 const MV_POSITIONS: MVPosition[] = [
   {
-    id: "mv1", vault: "Gami USDC", curator: "Gami Labs",
-    balanceAmount: "5.75910", balanceToken: "gamisUSDC", balanceUsd: "5.81",
-    estimatedValue: "5.81845 USDC", maxApy: "15.47%", base: "-",
+    id: "gami-spectra", vault: "Gami Spectra USDC", curator: "Gami Labs",
+    balanceAmount: "5,000.00", balanceToken: "gamisUSDC", balanceUsd: "5,031.20",
+    estimatedValue: "5,031.20 USDC", maxApy: "15.66%", base: "USDC",
   },
   {
-    id: "mv2", vault: "Morpho Blue ETH", curator: "Morpho Labs",
-    balanceAmount: "1.24500", balanceToken: "mbETH", balanceUsd: "4,280.12",
-    estimatedValue: "1.24812 ETH", maxApy: "8.92%", base: "ETH",
+    id: "vbusdc-katana", vault: "vbUSDC Katana", curator: "Clearstar",
+    balanceAmount: "5,000.00", balanceToken: "vbUSDC", balanceUsd: "5,018.75",
+    estimatedValue: "5,018.75 USDC", maxApy: "36.63%", base: "USDC",
   },
   {
-    id: "mv3", vault: "Steakhouse USDT", curator: "Steakhouse",
-    balanceAmount: "12,400.00", balanceToken: "shUSDT", balanceUsd: "12,438.60",
-    estimatedValue: "12,438.60 USDT", maxApy: "11.23%", base: "USDT",
+    id: "flare-xrp", vault: "Flare XRP Yield Prime", curator: "Gami Labs",
+    balanceAmount: "21,500.00", balanceToken: "flrXRP", balanceUsd: "12,438.60",
+    estimatedValue: "12,438.60 XRP", maxApy: "7.40%", base: "XRP",
   },
 ];
 
